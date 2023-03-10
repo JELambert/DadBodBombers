@@ -1,0 +1,6 @@
+pandas
+streamlit
+gsheetsdb
+pyparsing
+gspread
+google-auth
