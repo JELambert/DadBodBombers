@@ -11,7 +11,7 @@ from gsheetsdb import connect
 import gspread
 
 st.set_page_config(layout="wide")
- 
+
 credentials = service_account.Credentials.from_service_account_info(
     st.secrets["gcp_service_account"],
     scopes=[
@@ -21,6 +21,17 @@ credentials = service_account.Credentials.from_service_account_info(
 )
 
 client = gspread.authorize(credentials)
+
+@st.cache_resource()
+def get_sideBar(title):
+    st.sidebar.title(title)
+    image = get_image()
+    st.image(image)
+    st.markdown("[Schedule](https://teamsideline.com/sites/georgetown/schedule/450570/2680885/0/Dad-Bod-Bombers)")
+
+def get_project_id():
+    return 'dadbod_3_9_23'
+
 @st.cache_resource()
 def get_data(project_id):
     sheet = client.open(project_id).sheet1
@@ -37,7 +48,6 @@ def get_dadimage_1():
     image = Image.open('assets/dadbod_3_9_23.jpg')
     return image
 
-
 @st.cache_data()
 def batting_average(df):
     df.fillna(0, inplace=True)
@@ -51,19 +61,15 @@ def batting_average(df):
     df['total_bases'] = df['single'] + (2 * df['double']) + (3 * df['triple']) + (4 * df['homerun'])
 
     return df
-
+    
 def labeler():
 
     st.markdown("# Home Page")
     st.markdown("--------")
 
-    with st.sidebar:
-        st.sidebar.title('Home Page')
+    with st.sidebar: get_sideBar('Home Page')
 
-        image = get_image()
-        st.image(image)
-
-    project_id = 'dadbod_3_9_23'
+    project_id = get_project_id()
     df = get_data(project_id)
     df = batting_average(df)
     st.markdown("### Team Leaders")

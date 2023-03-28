@@ -4,36 +4,10 @@ import os
 import random
 import datetime
 import json
-from PIL import Image
 
-from google.oauth2 import service_account
-from gsheetsdb import connect
-import gspread
-
-
+from Home import get_sideBar, get_data, get_project_id
 
 st.set_page_config(layout="wide")
-
-credentials = service_account.Credentials.from_service_account_info(
-    st.secrets["gcp_service_account"],
-    scopes=[
-        "https://www.googleapis.com/auth/spreadsheets",
-        "https://www.googleapis.com/auth/drive"
-    ],
-)
-
-client = gspread.authorize(credentials)
-@st.cache_data()
-def get_data(project_id):
-    sheet = client.open(project_id).sheet1
-    dataframe = pd.DataFrame(sheet.get_all_records())
-    return dataframe
-
-@st.cache_data()
-def get_image():
-    image = Image.open('assets/logo.png')
-    return image
-
 
 @st.cache_data()
 def batting_average(df):
@@ -54,26 +28,12 @@ def labeler():
     st.markdown("# Team Stats")
     st.markdown("--------")
 
-
-    project_id = 'dadbod_3_9_23'
+    project_id = get_project_id()
     df = get_data(project_id)
-
-            
-    with st.sidebar:
-        st.sidebar.title('Team Stats')
-        image = get_image()
-        st.image(image)
-
-    project_id = 'dadbod_3_9_23'
-
-    
-    df = get_data(project_id)
-    #st.write(df)    
-
+     
+    with st.sidebar: get_sideBar('Team Stats')
 
     df = batting_average(df)
-
-
 
     col1, col2 = st.columns(2)
     with col1:
