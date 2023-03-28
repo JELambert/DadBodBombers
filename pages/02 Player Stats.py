@@ -10,24 +10,9 @@ from google.oauth2 import service_account
 from gsheetsdb import connect
 import gspread
 
-from Home import get_data
+from Home import get_sideBar, get_data, get_project_id
 
-credentials = service_account.Credentials.from_service_account_info(
-    st.secrets["gcp_service_account"],
-    scopes=[
-        "https://www.googleapis.com/auth/spreadsheets",
-        "https://www.googleapis.com/auth/drive"
-    ],
-)
-
-client = gspread.authorize(credentials)
-
-@st.cache_data()
-def get_image():
-    image = Image.open('assets/logo.png')
-    return image
-
-
+st.set_page_config(layout="wide")
 
 @st.cache_data()
 def batting_average(df):
@@ -48,18 +33,12 @@ def labeler():
     st.markdown("# Dad Bod Bombers")
     st.markdown("--------")
 
-    project_id = 'dadbod_3_9_23'
+    project_id = get_project_id()
     df = get_data(project_id)
     df = batting_average(df)
             
-    with st.sidebar:
-        st.sidebar.title('Player Stats')
+    with st.sidebar: get_sideBar('Player Stats')
 
-        image = Image.open('assets/logo.png')
-        st.image(image)
-
-
-    
     player = st.selectbox('Select a player', sorted(df['name'].unique()))
 
 
