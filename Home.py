@@ -30,7 +30,7 @@ def get_sideBar(title):
     st.markdown("[Schedule](https://teamsideline.com/sites/georgetown/schedule/450570/2680885/0/Dad-Bod-Bombers)")
 
 def get_project_id():
-    return 'dadbod_3_9_23'
+    return 'dadbod_3_30_23'
 
 @st.cache_resource()
 def get_data(project_id):
@@ -49,9 +49,36 @@ def get_dadimage_1():
     return image
 
 @st.cache_data()
+def manage_dfs(df):
+    game1 = pd.read_csv('data/dadbod_3_9_23 - lineup.csv').set_index('id').drop(columns=['name'])
+    id_name = pd.read_csv('data/id_name.csv').set_index('id')
+    
+    game1 = game1.merge(id_name, left_index=True, right_index=True)
+    game1.fillna(0, inplace=True)
+    game1.replace('', 0, inplace=True)
+
+    df = df.set_index('id').drop(columns=['name'])
+    df = df.merge(id_name, left_index=True, right_index=True)
+    recent_game = df
+    recent_game.fillna(0, inplace=True)
+    recent_game.replace('', 0, inplace=True)
+
+    game1[['atbats', 'walks', 'single', 'double', 'triple', 'homerun']] = game1[['atbats', 'walks', 'single', 'double', 'triple', 'homerun']].astype(int)
+    recent_game[['atbats', 'walks', 'single', 'double', 'triple', 'homerun']] = recent_game[['atbats', 'walks', 'single', 'double', 'triple', 'homerun']].astype(int)
+
+
+    dfnumsonly = df[[ 'atbats', 'walks', 'single', 'double', 'triple', 'homerun', 'run', 'rbi']]
+    game1numsonly = game1[[ 'atbats', 'walks', 'single', 'double', 'triple', 'homerun', 'run', 'rbi']]
+    
+    merged_df = dfnumsonly.add(game1numsonly, fill_value=0)
+    merged_df = merged_df.merge(id_name, left_index=True, right_index=True)
+    full_set = merged_df.reset_index()
+    
+    return full_set, game1, recent_game
+
+
+
 def batting_average(df):
-    df.fillna(0, inplace=True)
-    df.replace('', 0, inplace=True)
     df[['atbats', 'walks', 'single', 'double', 'triple', 'homerun']] = df[['atbats', 'walks', 'single', 'double', 'triple', 'homerun']].astype(int)
     df['batting_average'] = (df['single'] + df['double'] + df['triple'] + df['homerun'])  / (df['atbats'] - df['walks']) * (1000)
     df['hits'] = df['single'] + df['double'] + df['triple'] + df['homerun']
@@ -59,7 +86,6 @@ def batting_average(df):
     df['slugging'] = (df['single'] + (2 * df['double']) + (3 * df['triple']) + (4 * df['homerun'])) / df['atbats'] * (1000)
     df['onbase_plus_slugging'] = df['onbase'] + df['slugging']
     df['total_bases'] = df['single'] + (2 * df['double']) + (3 * df['triple']) + (4 * df['homerun'])
-
     return df
     
 def labeler():
@@ -71,7 +97,8 @@ def labeler():
 
     project_id = get_project_id()
     df = get_data(project_id)
-    df = batting_average(df)
+    full_set, game1, recent_game = manage_dfs(df)
+    df = batting_average(full_set)
     st.markdown("### Team Leaders")
 
     c1, c2, c3, c4 = st.columns(4)
@@ -114,7 +141,7 @@ def labeler():
 
 
     st.markdown("-------")
-    st.write("### Game 1 - 3/9/2021")
+    st.write("### Game 1 - 3/9/2023")
     col1, col2 = st.columns(2)
     with col1:
         st.metric('Away', "Dad Bod Bombers", 21, )
@@ -125,6 +152,17 @@ def labeler():
         st.image(evidence1)
     st.markdown("--------")
 
+    st.write("### Game 2 - 3/30/2023")
+    col1, col2 = st.columns(2)
+    with col1:
+        st.metric('Away', "Dad Bod Bombers", -14, )
+    with col2:
+        st.metric('Home', "Team Ramrod", 15)
+    with st.expander("See the evidence:"):
+        st.markdown('NO evidence of losses')
+    st.markdown("--------")
+
+    
 
 
 if __name__ == "__main__":
