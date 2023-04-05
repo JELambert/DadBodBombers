@@ -27,7 +27,9 @@ def get_sideBar(title):
     st.sidebar.title(title)
     image = get_image()
     st.image(image)
-    st.markdown("[Schedule](https://teamsideline.com/sites/georgetown/schedule/450570/2680885/0/Dad-Bod-Bombers)")
+    st.markdown("## [Click here for Schedule](https://teamsideline.com/sites/georgetown/schedule/450570/2680885/0/Dad-Bod-Bombers)")
+    st.markdown("")
+    st.markdown('## [Click here for Budget](https://docs.google.com/spreadsheets/d/1AYZyMQNMqUqAaN0m9aw4U5Uc73Vi5PNcn7pKeOcFMOg/edit?usp=sharing)')
 
 def get_project_id():
     return 'dadbod_3_30_23'
