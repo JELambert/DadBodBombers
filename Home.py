@@ -157,9 +157,9 @@ def labeler():
     st.write("### Game 2 - 3/30/2023")
     col1, col2 = st.columns(2)
     with col1:
-        st.metric('Away', "Dad Bod Bombers", -14, )
+        st.metric('Away', "Dad Bod Bombers", -15, )
     with col2:
-        st.metric('Home', "Team Ramrod", 15)
+        st.metric('Home', "Team Ramrod", 16)
     with st.expander("See the evidence:"):
         st.markdown('NO evidence of losses')
     st.markdown("--------")
