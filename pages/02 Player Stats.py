@@ -23,6 +23,14 @@ def manage_dfs(df):
     game1.fillna(0, inplace=True)
     game1.replace('', 0, inplace=True)
 
+
+    game2 = pd.read_csv('data/dadbod_3_30_23 - lineup.csv').set_index('id').drop(columns=['name'])
+    
+    game2 = game2.merge(id_name, left_index=True, right_index=True)
+    game2.fillna(0, inplace=True)
+    game2.replace('', 0, inplace=True)
+
+
     df = df.set_index('id').drop(columns=['name'])
     df = df.merge(id_name, left_index=True, right_index=True)
     recent_game = df
@@ -30,17 +38,21 @@ def manage_dfs(df):
     recent_game.replace('', 0, inplace=True)
 
     game1[['atbats', 'walks', 'single', 'double', 'triple', 'homerun']] = game1[['atbats', 'walks', 'single', 'double', 'triple', 'homerun']].astype(int)
+    game2[['atbats', 'walks', 'single', 'double', 'triple', 'homerun']] = game2[['atbats', 'walks', 'single', 'double', 'triple', 'homerun']].astype(int)
+    
     recent_game[['atbats', 'walks', 'single', 'double', 'triple', 'homerun']] = recent_game[['atbats', 'walks', 'single', 'double', 'triple', 'homerun']].astype(int)
 
 
     dfnumsonly = df[[ 'atbats', 'walks', 'single', 'double', 'triple', 'homerun', 'run', 'rbi']]
     game1numsonly = game1[[ 'atbats', 'walks', 'single', 'double', 'triple', 'homerun', 'run', 'rbi']]
+    game2numsonly = game2[[ 'atbats', 'walks', 'single', 'double', 'triple', 'homerun', 'run', 'rbi']]
     
     merged_df = dfnumsonly.add(game1numsonly, fill_value=0)
+    merged_df = merged_df.add(game2numsonly, fill_value=0)
     merged_df = merged_df.merge(id_name, left_index=True, right_index=True)
     full_set = merged_df.reset_index()
     
-    return full_set, game1, recent_game
+    return full_set, game1, game2, recent_game
 
 
 def batting_average(df):
@@ -60,7 +72,7 @@ def labeler():
 
     project_id = get_project_id()
     temp_df = get_data(project_id)
-    full_set, game1, recent_game = manage_dfs(temp_df)
+    full_set, game1, game2, recent_game = manage_dfs(temp_df)
     df = batting_average(full_set)
 
     with st.sidebar: get_sideBar('Player Stats')
@@ -68,10 +80,12 @@ def labeler():
     player = st.selectbox('Select a player', sorted(df['name'].unique()))
 
     g1 = batting_average(game1[game1['name'] == player])
+    g2 = batting_average(game2[game2['name'] == player])
     rg = batting_average(recent_game[recent_game['name'] == player])
     g1['game'] = 'Game 1'
-    rg['game'] = 'Game 2'
-    temporal = pd.concat([g1, rg])
+    g2['game'] = 'Game 2'
+    rg['game'] = 'Game 3'
+    temporal = pd.concat([g1, g2, rg])
     df = df[df['name'] == player]
 
     col1, col2 = st.columns(2)

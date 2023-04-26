@@ -32,7 +32,7 @@ def get_sideBar(title):
     st.markdown('## [Click here for Budget](https://docs.google.com/spreadsheets/d/1AYZyMQNMqUqAaN0m9aw4U5Uc73Vi5PNcn7pKeOcFMOg/edit?usp=sharing)')
 
 def get_project_id():
-    return 'dadbod_3_30_23'
+    return 'dadbod_4_13_23'
 
 @st.cache_resource()
 def get_data(project_id):
@@ -59,6 +59,14 @@ def manage_dfs(df):
     game1.fillna(0, inplace=True)
     game1.replace('', 0, inplace=True)
 
+
+    game2 = pd.read_csv('data/dadbod_3_30_23 - lineup.csv').set_index('id').drop(columns=['name'])
+    
+    game2 = game2.merge(id_name, left_index=True, right_index=True)
+    game2.fillna(0, inplace=True)
+    game2.replace('', 0, inplace=True)
+
+
     df = df.set_index('id').drop(columns=['name'])
     df = df.merge(id_name, left_index=True, right_index=True)
     recent_game = df
@@ -66,17 +74,21 @@ def manage_dfs(df):
     recent_game.replace('', 0, inplace=True)
 
     game1[['atbats', 'walks', 'single', 'double', 'triple', 'homerun']] = game1[['atbats', 'walks', 'single', 'double', 'triple', 'homerun']].astype(int)
+    game2[['atbats', 'walks', 'single', 'double', 'triple', 'homerun']] = game2[['atbats', 'walks', 'single', 'double', 'triple', 'homerun']].astype(int)
+    
     recent_game[['atbats', 'walks', 'single', 'double', 'triple', 'homerun']] = recent_game[['atbats', 'walks', 'single', 'double', 'triple', 'homerun']].astype(int)
 
 
     dfnumsonly = df[[ 'atbats', 'walks', 'single', 'double', 'triple', 'homerun', 'run', 'rbi']]
     game1numsonly = game1[[ 'atbats', 'walks', 'single', 'double', 'triple', 'homerun', 'run', 'rbi']]
+    game2numsonly = game2[[ 'atbats', 'walks', 'single', 'double', 'triple', 'homerun', 'run', 'rbi']]
     
     merged_df = dfnumsonly.add(game1numsonly, fill_value=0)
+    merged_df = merged_df.add(game2numsonly, fill_value=0)
     merged_df = merged_df.merge(id_name, left_index=True, right_index=True)
     full_set = merged_df.reset_index()
     
-    return full_set, game1, recent_game
+    return full_set, game1, game2, recent_game
 
 
 
@@ -99,7 +111,7 @@ def labeler():
 
     project_id = get_project_id()
     df = get_data(project_id)
-    full_set, game1, recent_game = manage_dfs(df)
+    full_set, game1, game2, recent_game = manage_dfs(df)
     df = batting_average(full_set)
     st.markdown("### Team Leaders")
 
@@ -165,6 +177,17 @@ def labeler():
     st.markdown("--------")
 
     
+
+    st.write("### Game 3 - 4/13/2023")
+    col1, col2 = st.columns(2)
+    with col1:
+        st.metric('Away', "Mad Lads", 22, )
+    with col2:
+        st.metric('Home', "Dad Bod Bombers", -11)
+    with st.expander("See the evidence:"):
+        st.markdown('NO evidence of losses')
+    st.markdown("--------")
+
 
 
 if __name__ == "__main__":

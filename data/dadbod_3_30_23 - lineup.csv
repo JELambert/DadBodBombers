@@ -1,0 +1,11 @@
+lineup_pos,name,atbats,single,double,triple,homerun,walks,rbi,run,id
+1,Chris,4,1,,,,1,1,2,8
+2,Carlos,4,,,,,,,,2
+3,Nico,4,2,,,,,,2,9
+4,Cody,4,,2,,,1,2,3,3
+5,Ben,3,1,,,,1,,2,4
+6,Grace,3,1,,,,2,,3,5
+7,Stephan,3,1,1,,,2,,,12
+8,Renzo,3,2,1,,,,,,10
+9,Sean,3,1,,,,,,,7
+10,Josh,3,,1,1,,,,2,1
