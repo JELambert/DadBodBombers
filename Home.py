@@ -170,6 +170,13 @@ def labeler():
         rbi = df.sort_values(by=['rbi'], ascending=False).head(5)[['name', 'rbi']]
         st.write(rbi)
 
+    st.markdown('--------')
+    st.markdown("## See the full stats sheet:")
+
+    with st.expander('click here'):
+        st.write(df)
+
+
     st.markdown("-------")
     st.write("### Game 1 - 3/9/2023")
     col1, col2 = st.columns(2)
