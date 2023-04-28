@@ -58,20 +58,19 @@ def manage_dfs(df):
     game1 = game1.merge(id_name, left_index=True, right_index=True)
     game1.fillna(0, inplace=True)
     game1.replace('', 0, inplace=True)
-
+    game1['games_played'] = 1
 
     game2 = pd.read_csv('data/dadbod_3_30_23 - lineup.csv').set_index('id').drop(columns=['name'])
-    
     game2 = game2.merge(id_name, left_index=True, right_index=True)
     game2.fillna(0, inplace=True)
     game2.replace('', 0, inplace=True)
+    game2['games_played'] = 1
 
     game3 = pd.read_csv('data/dadbod_4_13_23 - lineup.csv').set_index('id').drop(columns=['name'])
-    
     game3 = game3.merge(id_name, left_index=True, right_index=True)
     game3.fillna(0, inplace=True)
     game3.replace('', 0, inplace=True)
-
+    game3['games_played'] = 1
 
 
     df = df.set_index('id').drop(columns=['name'])
@@ -125,7 +124,7 @@ def labeler():
     df = batting_average(full_set)
     st.markdown("### Team Leaders")
 
-    c1, c2, c3, c4 = st.columns(4)
+    c1, c2, c3, c4, c5 = st.columns(5)
     with c1:
         st.markdown("#### Singles")
         singles = df.loc[df.single>0].sort_values(by=['single'], ascending=False).head(5)[['name', 'single']]
@@ -143,9 +142,13 @@ def labeler():
         st.markdown("#### Homeruns")
         homers = df.loc[df.homerun>0].sort_values(by=['homerun'], ascending=False).head(5)[['name', 'homerun']]
         st.write(homers)
+    with c5:
+        st.markdown("#### Total Bases")
+        total_bases = df.loc[df.total_bases>0].sort_values(by=['total_bases'], ascending=False).head(5)[['name', 'total_bases']]
+        st.write(total_bases)
 
     st.markdown("--------")
-    cl1, cl2, cl3, cl4 = st.columns(4)
+    cl1, cl2, cl3, cl4, cl5 = st.columns(5)
     with cl1:
         st.markdown("#### Batting Average")
         baframe = df.sort_values(by=['batting_average'], ascending=False).head(5)[['name', 'batting_average']]
@@ -155,14 +158,17 @@ def labeler():
         onbase = df.sort_values(by=['onbase'], ascending=False).head(5)[['name', 'onbase']]
         st.write(onbase)
     with cl3:
+        st.markdown("#### Slugging %")
+        slugging = df.sort_values(by=['slugging'], ascending=False).head(5)[['name', 'slugging']]
+        st.write(slugging)
+    with cl4:
         st.markdown("#### Runs")
         runs = df.sort_values(by=['run'], ascending=False).head(5)[['name', 'run']]
         st.write(runs)
-    with cl4:
+    with cl5:
         st.markdown("#### RBI")
         rbi = df.sort_values(by=['rbi'], ascending=False).head(5)[['name', 'rbi']]
         st.write(rbi)
-
 
     st.markdown("-------")
     st.write("### Game 1 - 3/9/2023")
