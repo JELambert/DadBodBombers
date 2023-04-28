@@ -32,7 +32,7 @@ def get_sideBar(title):
     st.markdown('## [Click here for Budget](https://docs.google.com/spreadsheets/d/1AYZyMQNMqUqAaN0m9aw4U5Uc73Vi5PNcn7pKeOcFMOg/edit?usp=sharing)')
 
 def get_project_id():
-    return 'dadbod_4_13_23'
+    return 'dadbod_4_27_23'
 
 @st.cache_resource()
 def get_data(project_id):
@@ -66,6 +66,13 @@ def manage_dfs(df):
     game2.fillna(0, inplace=True)
     game2.replace('', 0, inplace=True)
 
+    game3 = pd.read_csv('data/dadbod_4_13_23 - lineup.csv').set_index('id').drop(columns=['name'])
+    
+    game3 = game3.merge(id_name, left_index=True, right_index=True)
+    game3.fillna(0, inplace=True)
+    game3.replace('', 0, inplace=True)
+
+
 
     df = df.set_index('id').drop(columns=['name'])
     df = df.merge(id_name, left_index=True, right_index=True)
@@ -75,20 +82,23 @@ def manage_dfs(df):
 
     game1[['atbats', 'walks', 'single', 'double', 'triple', 'homerun']] = game1[['atbats', 'walks', 'single', 'double', 'triple', 'homerun']].astype(int)
     game2[['atbats', 'walks', 'single', 'double', 'triple', 'homerun']] = game2[['atbats', 'walks', 'single', 'double', 'triple', 'homerun']].astype(int)
+    game3[['atbats', 'walks', 'single', 'double', 'triple', 'homerun']] = game3[['atbats', 'walks', 'single', 'double', 'triple', 'homerun']].astype(int)
     
     recent_game[['atbats', 'walks', 'single', 'double', 'triple', 'homerun']] = recent_game[['atbats', 'walks', 'single', 'double', 'triple', 'homerun']].astype(int)
-
 
     dfnumsonly = df[[ 'atbats', 'walks', 'single', 'double', 'triple', 'homerun', 'run', 'rbi']]
     game1numsonly = game1[[ 'atbats', 'walks', 'single', 'double', 'triple', 'homerun', 'run', 'rbi']]
     game2numsonly = game2[[ 'atbats', 'walks', 'single', 'double', 'triple', 'homerun', 'run', 'rbi']]
-    
+    game3numsonly = game3[[ 'atbats', 'walks', 'single', 'double', 'triple', 'homerun', 'run', 'rbi']]
+
+
     merged_df = dfnumsonly.add(game1numsonly, fill_value=0)
     merged_df = merged_df.add(game2numsonly, fill_value=0)
+    merged_df = merged_df.add(game3numsonly, fill_value=0)
     merged_df = merged_df.merge(id_name, left_index=True, right_index=True)
     full_set = merged_df.reset_index()
     
-    return full_set, game1, game2, recent_game
+    return full_set, game1, game2, game3, recent_game
 
 
 
@@ -111,7 +121,7 @@ def labeler():
 
     project_id = get_project_id()
     df = get_data(project_id)
-    full_set, game1, game2, recent_game = manage_dfs(df)
+    full_set, game1, game2, game3, recent_game = manage_dfs(df)
     df = batting_average(full_set)
     st.markdown("### Team Leaders")
 

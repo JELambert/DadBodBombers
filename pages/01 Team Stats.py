@@ -26,6 +26,13 @@ def manage_dfs(df):
     game2.fillna(0, inplace=True)
     game2.replace('', 0, inplace=True)
 
+    game3 = pd.read_csv('data/dadbod_4_13_23 - lineup.csv').set_index('id').drop(columns=['name'])
+    
+    game3 = game3.merge(id_name, left_index=True, right_index=True)
+    game3.fillna(0, inplace=True)
+    game3.replace('', 0, inplace=True)
+
+
 
     df = df.set_index('id').drop(columns=['name'])
     df = df.merge(id_name, left_index=True, right_index=True)
@@ -35,20 +42,23 @@ def manage_dfs(df):
 
     game1[['atbats', 'walks', 'single', 'double', 'triple', 'homerun']] = game1[['atbats', 'walks', 'single', 'double', 'triple', 'homerun']].astype(int)
     game2[['atbats', 'walks', 'single', 'double', 'triple', 'homerun']] = game2[['atbats', 'walks', 'single', 'double', 'triple', 'homerun']].astype(int)
+    game3[['atbats', 'walks', 'single', 'double', 'triple', 'homerun']] = game3[['atbats', 'walks', 'single', 'double', 'triple', 'homerun']].astype(int)
     
     recent_game[['atbats', 'walks', 'single', 'double', 'triple', 'homerun']] = recent_game[['atbats', 'walks', 'single', 'double', 'triple', 'homerun']].astype(int)
-
 
     dfnumsonly = df[[ 'atbats', 'walks', 'single', 'double', 'triple', 'homerun', 'run', 'rbi']]
     game1numsonly = game1[[ 'atbats', 'walks', 'single', 'double', 'triple', 'homerun', 'run', 'rbi']]
     game2numsonly = game2[[ 'atbats', 'walks', 'single', 'double', 'triple', 'homerun', 'run', 'rbi']]
-    
+    game3numsonly = game3[[ 'atbats', 'walks', 'single', 'double', 'triple', 'homerun', 'run', 'rbi']]
+
+
     merged_df = dfnumsonly.add(game1numsonly, fill_value=0)
     merged_df = merged_df.add(game2numsonly, fill_value=0)
+    merged_df = merged_df.add(game3numsonly, fill_value=0)
     merged_df = merged_df.merge(id_name, left_index=True, right_index=True)
     full_set = merged_df.reset_index()
     
-    return full_set, game1, game2, recent_game
+    return full_set, game1, game2, game3, recent_game
 
 def batting_average(df):
     df[['atbats', 'walks', 'single', 'double', 'triple', 'homerun']] = df[['atbats', 'walks', 'single', 'double', 'triple', 'homerun']].astype(int)
@@ -67,16 +77,19 @@ def labeler():
 
     project_id = get_project_id()
     temp_df = get_data(project_id)
-    full_set, game1, game2, recent_game = manage_dfs(temp_df)
+    full_set, game1, game2, game3, recent_game = manage_dfs(temp_df)
     df = batting_average(full_set)
 
     g1 = batting_average(game1)
     g2 = batting_average(game2)
+    g3 = batting_average(game3)
     rg = batting_average(recent_game)
     g1['game'] = 'Game 1'
     g2['game'] = 'Game 2'
-    rg['game'] = 'Game 3'
-    temporal = pd.concat([g1, g2, rg])
+    g3['game'] = 'Game 3'
+    rg['game'] = 'Game 4'
+
+    temporal = pd.concat([g1, g2, g3, rg])
     with st.sidebar: get_sideBar('Team Stats')
 
 
