@@ -212,6 +212,16 @@ def labeler():
     st.markdown("--------")
 
 
+    st.write("### Game 4 - 4/27/2023")
+    col1, col2 = st.columns(2)
+    with col1:
+        st.metric('Away', "Coors Inc.", 16, )
+    with col2:
+        st.metric('Home', "Dad Bod Bombers", -5)
+    with st.expander("See the evidence:"):
+        st.markdown('NO evidence of losses')
+    st.markdown("--------")
+
 
 if __name__ == "__main__":
     labeler()
