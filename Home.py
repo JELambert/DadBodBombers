@@ -6,6 +6,9 @@ import datetime
 import json
 from PIL import Image
 
+
+import matplotlib.pyplot as plt
+
 from google.oauth2 import service_account
 from gsheetsdb import connect
 import gspread
@@ -164,6 +167,53 @@ def labeler():
     full_set, game1, game2, game3, game4, game5, game6 = manage_dfs(df, recent=False)
 
     df = batting_average(full_set)
+
+    st.markdown("### End of Season Feedback")
+    
+    feed = pd.read_excel('data/Spring23 Survey (Responses).xlsx')
+    feed = feed[['Overall Vibes', 'Coaching quality', 'Did you agree with the lineups?', 'Did you agree with where you played in the field?']]
+
+    col1, col2 = st.columns(2)
+    with col1:
+        st.metric('0=Bad, 10=Best', "Overall Team Vibes", feed['Overall Vibes'].mean(), )
+        #feed['Did you agree with the lineups?'].value_counts().plot(kind='barh')
+        st.markdown('----------')
+
+        category_counts = feed['Did you agree with the lineups?'].value_counts()
+        st.markdown('#### Did you agree with the lineups?')
+        # Plot the pie chart
+        fig, ax = plt.subplots(figsize=(6,6))
+        ax.pie(category_counts, labels=category_counts.index, autopct='%1.1f%%')
+        ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+
+        # Display the chart using Streamlit
+        st.pyplot(fig)
+        #st.pyplot(feed['Did you agree with where you played in the field?'].value_counts().plot(kind='barh'))
+    with col2:
+        st.metric('0=Bad, 10=Best', "Coaching Quality", feed['Coaching quality'].mean(), )
+        st.markdown('----------')
+
+
+        category_counts = feed['Did you agree with where you played in the field?'].value_counts()
+        st.markdown('#### Did you agree with where you played in the field?')
+        # Plot the pie chart
+        fig, ax = plt.subplots(figsize=(6,6))
+        ax.pie(category_counts, labels=category_counts.index, autopct='%1.1f%%')
+        ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+
+        # Display the chart using Streamlit
+        st.pyplot(fig)
+
+
+    st.markdown('----------')
+    st.markdown("#### Open response feedback")
+    openresponse = Image.open('assets/wordcloud.png')
+
+    st.image(openresponse)
+
+    st.markdown('----------')
+
+
     st.markdown("### Team Leaders")
 
     c1, c2, c3, c4, c5 = st.columns(5)
@@ -218,74 +268,6 @@ def labeler():
     with st.expander('click here'):
         st.write(df)
 
-
-    st.markdown("-------")
-    st.write("### Game 1 - 3/9/2023")
-    col1, col2 = st.columns(2)
-    with col1:
-        st.metric('Away', "Dad Bod Bombers", 21, )
-    with col2:
-        st.metric('Home', "Dr. Unks", -8)
-    with st.expander("See the evidence:"):
-        evidence1 = get_dadimage_1()
-        st.image(evidence1)
-    st.markdown("--------")
-
-    st.write("### Game 2 - 3/30/2023")
-    col1, col2 = st.columns(2)
-    with col1:
-        st.metric('Away', "Dad Bod Bombers", -15, )
-    with col2:
-        st.metric('Home', "Team Ramrod", 16)
-    with st.expander("See the evidence:"):
-        st.markdown('NO evidence of losses')
-    st.markdown("--------")
-
-    
-
-    st.write("### Game 3 - 4/13/2023")
-    col1, col2 = st.columns(2)
-    with col1:
-        st.metric('Away', "Mad Lads", 22, )
-    with col2:
-        st.metric('Home', "Dad Bod Bombers", -11)
-    with st.expander("See the evidence:"):
-        st.markdown('NO evidence of losses')
-    st.markdown("--------")
-
-
-    st.write("### Game 4 - 4/27/2023")
-    col1, col2 = st.columns(2)
-    with col1:
-        st.metric('Away', "Coors Inc.", 16, )
-    with col2:
-        st.metric('Home', "Dad Bod Bombers", -5)
-    with st.expander("See the evidence:"):
-        st.markdown('NO evidence of losses')
-    st.markdown("--------")
-
-
-
-    st.write("### Game 5a - 5/4/2023 -- Score Unexact")
-    col1, col2 = st.columns(2)
-    with col1:
-        st.metric('Away', "Ramrod", 14, )
-    with col2:
-        st.metric('Home', "Dad Bod Bombers", -13)
-    with st.expander("See the evidence:"):
-        st.markdown('NO evidence of losses')
-    st.markdown("--------")
-
-
-    st.write("### Game 5b - 5/4/2023 -- Score Unexact")
-    col1, col2 = st.columns(2)
-    with col1:
-        st.metric('Away', "Ramrod", 14, )
-    with col2:
-        st.metric('Home', "Dad Bod Bombers", -13)
-    with st.expander("See the evidence:"):
-        st.markdown('NO evidence of losses')
-    st.markdown("--------")
 
 if __name__ == "__main__":
     labeler()

@@ -4,3 +4,4 @@ gsheetsdb
 pyparsing
 gspread
 google-auth
+wordcloud
