@@ -5,3 +5,5 @@ pyparsing
 gspread
 google-auth
 wordcloud
+matplotlib
+openpyxl
