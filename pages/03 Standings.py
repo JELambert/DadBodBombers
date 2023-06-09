@@ -1,31 +1,33 @@
 import streamlit as st
 import pandas as pd
-import os
 from PIL import Image
+from utils import *
 
 @st.cache_data()
 def get_dadimage_1():
     image = Image.open('assets/dadbod_3_9_23.jpg')
     return image
 
-@st.cache_resource()
-def get_sideBar(title):
-    st.sidebar.title(title)
-    image = get_image()
-    st.image(image)
-    st.markdown("## [Click here for Schedule](https://www.teamsideline.com/sites/georgetown/schedule/476652/Thursday-Mens-Recreational-League)")
-    st.markdown("")
-    st.markdown('## [Click here for Budget](https://docs.google.com/spreadsheets/d/1AYZyMQNMqUqAaN0m9aw4U5Uc73Vi5PNcn7pKeOcFMOg/edit?usp=sharing)')
-
-@st.cache_data()
-def get_image():
-    image = Image.open('assets/logo.png')
-    return image
-
 def standings():
     with st.sidebar: get_sideBar('Standings Page')
 
+    st.markdown('# SEASON 2')
+    st.write("### Game 7 - 6/8/2023")
+    col1, col2 = st.columns(2)
+    with col1:
+        st.metric('Away', "Pitch Slaps", -4)
+    with col2:
+        st.metric('Home', "Dad Bod Bombers", 17, )
+    with st.expander("See the evidence:"):
+        st.markdown('Looking for some evidence')        
+    st.markdown("--------")
+
+
+
+    st.markdown('')
     st.markdown("-------")
+    st.markdown('# SEASON 1')
+    st.markdown('')
     st.write("### Game 1 - 3/9/2023")
     col1, col2 = st.columns(2)
     with col1:
