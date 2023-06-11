@@ -19,7 +19,9 @@ def standings():
     with col2:
         st.metric('Home', "Dad Bod Bombers", 17, )
     with st.expander("See the evidence:"):
-        st.markdown('Looking for some evidence')        
+        video_file = open('assets/dadbod_6_8_23.mov', 'rb')
+        video_bytes = video_file.read()
+        st.video(video_bytes)    
     st.markdown("--------")
 
 

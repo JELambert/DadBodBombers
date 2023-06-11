@@ -6,6 +6,10 @@ import matplotlib.pyplot as plt
 from utils import *
 
 st.set_page_config(layout="wide")
+@st.cache_data()
+def convert_df(df):
+    # IMPORTANT: Cache the conversion to prevent computation on every rerun
+    return df.to_csv().encode('utf-8')
 
 def labeler():
 
@@ -70,9 +74,28 @@ def labeler():
     st.markdown('--------')
     st.markdown("## See the full stats sheet:")
 
-    with st.expander('click here'):
+    with st.expander('Click here for aggregated stats'):
         st.write(df)
 
+        csv = convert_df(df)
+
+        st.download_button(
+            label="Download data as CSV",
+            data=csv,
+            file_name='agg_data.csv',
+            mime='text/csv',
+        )
+    with st.expander('Click here for broken down stats'):
+        st.write(df_full)
+
+        csv = convert_df(df_full)
+
+        st.download_button(
+            label="Download data as CSV",
+            data=csv,
+            file_name='full_data.csv',
+            mime='text/csv',
+        )
     st.markdown('--------')
     st.markdown('\n')
     st.markdown("### End of Season Feedback")
