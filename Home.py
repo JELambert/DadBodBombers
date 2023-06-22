@@ -85,6 +85,13 @@ def labeler():
             file_name='agg_data.csv',
             mime='text/csv',
         )
+
+        st.download_button(
+            label="Download data as Json",
+            data=df.to_json(orient='records', lines=True),
+            file_name='agg_data.jsonl',
+            mime='application/json',
+        )
     with st.expander('Click here for broken down stats'):
         st.write(df_full)
 
@@ -96,6 +103,7 @@ def labeler():
             file_name='full_data.csv',
             mime='text/csv',
         )
+
     st.markdown('--------')
     st.markdown('\n')
     st.markdown("### End of Season Feedback")

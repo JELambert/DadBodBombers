@@ -11,7 +11,17 @@ def get_dadimage_1():
 def standings():
     with st.sidebar: get_sideBar('Standings Page')
 
-    st.markdown('# SEASON 2')
+    st.markdown('# SEASON 2 - (1-1)')
+    st.write("### Game 8 - 6/15/2023")
+    col1, col2 = st.columns(2)
+    with col1:
+        st.metric('Away', "Dad Bod Bombers", -3)
+    with col2:
+        st.metric('Home', "Dr. Unks", 13, )
+    with st.expander("See the evidence:"):
+        st.markdown('NO evidence of losses')
+    st.markdown("--------")
+
     st.write("### Game 7 - 6/8/2023")
     col1, col2 = st.columns(2)
     with col1:
@@ -28,7 +38,7 @@ def standings():
 
     st.markdown('')
     st.markdown("-------")
-    st.markdown('# SEASON 1')
+    st.markdown('# SEASON 1 (1-6)')
     st.markdown('')
     st.write("### Game 1 - 3/9/2023")
     col1, col2 = st.columns(2)
