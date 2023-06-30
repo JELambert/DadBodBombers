@@ -11,7 +11,7 @@ def get_dadimage_1():
 def standings():
     with st.sidebar: get_sideBar('Standings Page')
 
-    st.markdown('# SEASON 2 - (1-1)')
+    st.markdown('# SEASON 2 - (1-3)')
 
     st.write("### Game 10 - 6/29/2023")
     col1, col2 = st.columns(2)
