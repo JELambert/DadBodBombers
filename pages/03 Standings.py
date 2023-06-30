@@ -12,6 +12,17 @@ def standings():
     with st.sidebar: get_sideBar('Standings Page')
 
     st.markdown('# SEASON 2 - (1-1)')
+
+    st.write("### Game 10 - 6/29/2023")
+    col1, col2 = st.columns(2)
+    with col1:
+        st.metric('Away', "TECO WESTINGHOUSE", 20)
+    with col2:
+        st.metric('Home', "Dad Bod Bombers", -11, )
+    with st.expander("See the evidence:"):
+        st.markdown('NO evidence of losses')
+    st.markdown("--------")
+
     st.write("### Game 9 - 6/22/2023")
     col1, col2 = st.columns(2)
     with col1:
