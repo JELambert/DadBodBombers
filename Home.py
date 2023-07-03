@@ -19,9 +19,16 @@ def labeler():
     with st.sidebar: get_sideBar('Home Page')
 
     df_full, df_full_nums = data_munging()
-    df_agg = df_full.groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
+    
+    split = st.radio("Select a split:", ("All-Time", 'Season 1', 'Season 2'))
+    if split == 'All-Time':
+        df_agg = df_full.groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
+    elif split == 'Season 1':
+        df_agg = df_full.loc[df_full.game <7].groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
+    elif split == 'Season 2':
+        df_agg = df_full.loc[df_full.game >6].groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
+    
     df = add_cumulative_stats(df_agg)
-
 
     st.markdown("### Team Leaders")
 
