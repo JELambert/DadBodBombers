@@ -59,7 +59,7 @@ def standings():
 
     st.markdown('')
     st.markdown("-------")
-    st.markdown('# SEASON 1 (1-6)')
+    st.markdown('# SEASON 1 (1-5)')
     st.markdown('')
     st.write("### Game 1 - 3/9/2023")
     col1, col2 = st.columns(2)
