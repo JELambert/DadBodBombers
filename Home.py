@@ -20,14 +20,40 @@ def labeler():
 
     df_full, df_full_nums = data_munging()
     
-    split = st.radio("Select a split:", ("All-Time", 'Season 1', 'Season 2'))
-    if split == 'All-Time':
-        df_agg = df_full.groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
-    elif split == 'Season 1':
-        df_agg = df_full.loc[df_full.game <7].groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
-    elif split == 'Season 2':
-        df_agg = df_full.loc[df_full.game >6].groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
-    
+    topcol1, topcol2 = st.columns(2)
+    with topcol1:
+        split = st.radio("Select a split:", ("All-Time", 'Season 1', 'Season 2'))
+        if split == 'All-Time':
+            df_agg = df_full.groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
+        elif split == 'Season 1':
+            df_agg = df_full.loc[df_full.game <7].groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
+        elif split == 'Season 2':
+            df_agg = df_full.loc[df_full.game >6].groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
+    with topcol2:
+        if split == 'All-Time':
+            st.write("")
+        elif split == 'Season 1':
+            st.write('## :crown: Co-MVP Awards :crown:')
+            sub1, sub2 = st.columns(2)
+            with sub1:
+                st.write("### Ben")
+                st.write("* Homerun and Total bases leader.")
+                st.write("* Top 5 in 9/10 categories.")
+                st.write("* Top 2 in 5/10 categories.")
+
+            with sub2:
+                st.write("### Tyler")
+                st.write("* Averaged 4 bases per game.")
+                st.write("* Top 5 in 9/10 categories.")
+                st.write("* Missed the cyle in Game 5 by only a single.")
+        elif split == 'Season 2':
+            st.write("Season 2 MVP Award: TBD")
+            sub1, sub2 = st.columns(2)
+            with sub1:
+                st.write("### :shield: Defensive MVP :shield:")
+            with sub2:
+                st.write("### :hammer: Offensive MVP :hammer:")
+
     df = add_cumulative_stats(df_agg)
 
     st.markdown("### Team Leaders")
