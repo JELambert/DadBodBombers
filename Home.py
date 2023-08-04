@@ -47,12 +47,17 @@ def labeler():
                 st.write("* Top 5 in 9/10 categories.")
                 st.write("* Missed the cyle in Game 5 by only a single.")
         elif split == 'Season 2':
-            st.write("Season 2 MVP Award: TBD")
+            st.write("Season 2 MVP Awards")
             sub1, sub2 = st.columns(2)
             with sub1:
                 st.write("### :shield: Defensive MVP :shield:")
+                st.write("#### Spangler")
+                st.write("* When starting SS, 4 runs given up per game vs 14")
             with sub2:
                 st.write("### :hammer: Offensive MVP :hammer:")
+                st.write("#### Grace")
+                st.write('* Top 5 in 10/10 categories.')
+                st.write("* Top 2 in 6/10 categories.")
 
     df = add_cumulative_stats(df_agg)
 
