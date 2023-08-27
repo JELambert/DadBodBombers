@@ -13,9 +13,10 @@ def coaching():
         st.markdown('''First 5 batters generally get one extra at bat, so as a result, these spots will always be top 5 batters at a given time. 
 
 ### Leadoff 
-While originally believed to be a speedy runner, watching TecoWestinghouse, and also how our next few hitters hit, we can see this position does not necessarily need to be our fastest person. They will almost certainly be hit in by spots 2-3. What we need from this position is someone who is
-1. Always on base (high batting %, high on base %)
+While originally believed to be a speedy runner, watching TecoWestinghouse, and also how our next few hitters hit, we can see this position does not necessarily need to be our fastest person. They will almost certainly be hit in by spots 2-3. What we need from this position is someone who is:
+1. Always on base (high batting %, high on base %). Out's are absolutely devastating from a leadoff.
 2. Smart enough to take pitches, elongate game, and be situational since at end of games we may need this from someone who gets an extra at bat. 
+3. Needs to be able to handle a little added pressure.
 
 ### 2 and 3
 I put these together because they are in many ways the same justifications with only slight modifications. These must be your two best hitters. What is *Best* can be hard to determine, but in practice, they:
@@ -25,10 +26,14 @@ I put these together because they are in many ways the same justifications with 
 4. they understand how to move runners across (RBIs),
 5. and they score (Runs). 
 
-Many schools of thought vary but I typically follow the 2 hole is your best hitter, and 3 hole is runner up. 
+Many schools of thought vary but I typically follow the 2 hole is your best hitter, and 3 hole is runner up. These two need to generate between 4-5 runs per game between scoring and RBIs. 
 
 ## 4 and 5
-Again these are put together because they are interchangeable in many ways. While it would be great to have Power Hitters. The reality is these need to function as leadoffs/2/3 holes most often too. The chances are decent that 2 or 3 has already cleared the bases. So if 4 comes up with no one on, a HR does little to help us, but an out kills us. We need hitters who are getting on base as priority 1, and then getting extra base hits as priority 2. 
+Again these are put together because they are interchangeable in many ways. 
+
+While it would be great to have Power Hitters in the classical sense of 4 and 5, in softball it's a little different. We need runs, and for us to sustain innings we need runners. 4 and 5 hole get an extra at bat typically so we need our next most reliable hitters. 
+
+These batters often need to function as leadoffs/2/3 holes too. The chances are decent that 2 or 3 has already cleared the bases. So if 4 comes up with no one on, a HR does little to help us, but an out kills us. We need hitters who are getting on base as priority 1, and then getting extra base hits as priority 2. 
 
 ----
 
@@ -36,26 +41,25 @@ A note past 5. We now get into situational orders dependent upon who remains rel
 
 ----
 ### 6 and 7
-We need to keep innings going, piling on runs after a hopefully strong start from our top 5. Spray hitters with high BA and OBP are key. 
+We need to keep innings going, piling on runs after a hopefully strong start from our top 5. Spray hitters with high BA and OBP are key. Depends on composition of who is present, but almost always a more reliable hitter who can sustain innings.
 
 ### 8 and 9 
-Start filtering in your high risk high reward folks. Might have lower BA but they also have a chance of jumping on a pitch and going deep, or really pushing the basepaths.
+At this point we are ready to start filtering in high risk, high reward folks. Might have lower BA but they also have a chance of jumping on a pitch and going deep, or really pushing the basepaths. 
 
 ### 10, 11, 12
 To round out, we add in those who are not getting on base frequently. As an order of priority, higher BA, more hits, will likely bat before those with the opposite. 
-
 ''')
                     
 
     with st.expander("Click to reveal Batting Order Justification"):
         st.markdown('''
-These justifications take into account both seasons, however a bit more weight is added to recency. Maybe 70/30 ish. 
+
+These justifications take into account both seasons, however a bit more weight is added to recency. Maybe 70/30 ish. This can change, and I'll try to keep it updated as the season goes on. I like to give folks some confidence by letting them hit in a position for a game or two before making big switches. This can change and is just representative of he 20-30 at bats most people have gotten. 
 ### Leadoff 
-Based on what we need out of a leadoff its Beep. Most singles last season, situational awareness demonstrated in the game we needed extended, BA in top 3. Not bottom speed when he wants.
+Based on what we need out of a leadoff its Beep. Most singles last season, situational awareness demonstrated in the game we needed extended, BA in top 3. Not bottom speed when he wants. He gives us a chance to score immediately. 
 Next up: Grace, Cody, Spangler
 ### 2 and 3
-
-Tyler and Josh. Tops in almost every category. Highest two in. slugging % by a ways. Hits per at bat, xb hits per at bat. I give Tyler the edge in the two hole because he has more Hits/At bat.
+Tyler and Josh. Tops in almost every category. Highest two in. slugging % by a ways. Hits per at bat, xb hits per at bat. I give Tyler the edge in the two hole because he has more Hits/At bat. 
 
 Next up: Grace, Cody, Spangler
 
@@ -78,14 +82,15 @@ Next Up: Dan, Niko
 ### 8 and 9 
 Dan, Niko
 
-Homerun power so good time to take high risk high reward before end of lineup. Below 500 batting average. 
+Home run power so its a good time to plug in that high risk/reward before end of lineup. Below 500 batting average. 
 
 Next Up: Renzo
 ### 10, 11, 12
 
 Renzo, Frank, Sean, Shack
 
-Below 300 BA last season, could put Renzo at the end to add a functional *second* leadoff given his speed. ''')
+Below 300 BA last season, could put Renzo at the end to add a functional *second* leadoff given his speed.
+ ''')
                     
 
     with st.expander("Click to reveal Fielding Philsophy"):
