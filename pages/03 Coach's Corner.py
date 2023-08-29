@@ -1,12 +1,35 @@
 import streamlit as st
 from utils import *
 
+from google.oauth2 import service_account
+from googleapiclient.discovery import build
+
+# Set up credentials
+credentials = service_account.Credentials.from_service_account_info(
+    st.secrets["gcp_service_account"],
+    scopes=[
+        "https://www.googleapis.com/auth/drive.readonly",
+        "https://www.googleapis.com/auth/spreadsheets.readonly"
+    ]
+)
+
+# Use the Drive API
+service = build('drive', 'v3', credentials=credentials)
+
+
+
 def return_markdown(filepath):
     with open(filepath, 'r') as file:
         content = file.read()
     # Split the content on 'SKIPABOVE' and get everything below it
     _, content_to_display = content.split('SKIPABOVE', 1)
     # Display it in Streamlit
+    return content_to_display
+
+def return_google_markdown(file_id):
+    request = service.files().get_media(fileId=file_id)
+    content = request.execute()
+    _, content_to_display = content.decode("utf-8").split('SKIPABOVE', 1)
     return content_to_display
 
 def coaching():
@@ -16,7 +39,15 @@ def coaching():
     st.markdown("* This will serve as our wiki for coaching philsophy, decisions, and feedback.")
     st.markdown("* Caveat: If you have strong thoughts and opinions let them be heard and we will figure it out. This is just a starting point, but I think it's important to be transparent. I will try to keep this updated as we go.")
     
-    battingPhilosophy, battingJustification, fieldingPhilosophy, fieldingJustification, tab5 = st.tabs(["Batting Order Philosophy", "Batting Order Justification", "Fielding Philosophy", "Fielding Justification", "Personalized Feedback"])
+
+    # Assuming you have the file ID of the markdown file on Google Drive
+# Fetch the file and display its content
+
+
+
+
+
+    battingPhilosophy, battingJustification, fieldingPhilosophy, fieldingJustification, feedback = st.tabs(["Batting Order Philosophy", "Batting Order Justification", "Fielding Philosophy", "Fielding Justification", "Personalized Feedback"])
 
     with battingPhilosophy:
         path = 'assets/docs/Batting Order Philosophy.md'
@@ -32,28 +63,25 @@ def coaching():
         path = 'assets/docs/Fielding Justification.md'
         st.markdown(return_markdown(path))
     
-    with tab5:
+    with feedback:
         placeholder = st.empty()
     
         with placeholder.form(key="login"):
-            user = st.text_input("Username")
-            password = st.text_input("Password")
+            user = st.text_input("Email")
             st.form_submit_button("Login")
                     
         users = ['Beep', 'Tyler', 'LambertDBB', 'Grace', 'Ben', 'Forrest','Spangler',
                  'Sweet', 'Cody',  'Niko',  'Dan', 'Renzo', 'Sean', 'Shack', 'Frank']
 
-        usernames = [st.secrets[x]['username'] for x in users]
-        passwords = [st.secrets[x]['password'] for x in users]
-        users_usernames_andPasswords = dict(zip(users, zip(usernames, passwords)))
+        emails = [st.secrets[x]['username'] for x in users]
+        fileIds = [st.secrets[x]['fileid'] for x in users]
+        emails_ids = dict(zip(users, zip(emails, fileIds)))
 
-        if user and password:
-            for k in users_usernames_andPasswords:
-                if user == users_usernames_andPasswords[k][0] and password == users_usernames_andPasswords[k][1]:
+        if user:
+            for k in emails_ids:
+                if user == emails_ids[k][0]:
                     st.markdown("### Welcome {} to your personalized Coach's Corner".format(k.capitalize()))
-
-                    path = 'assets/docs/dontlookhere/{}.md'.format(k.capitalize())
-                    st.markdown(return_markdown(path))
+                    st.markdown(return_google_markdown(emails_ids[k][1]))
 
                     placeholder.empty()
 
