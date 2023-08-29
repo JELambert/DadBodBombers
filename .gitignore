@@ -3,3 +3,4 @@ secrets.toml
 *.pyc
 *teamdocs/*
 assets/diamond2.jpg
+copy_files.py
