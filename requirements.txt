@@ -7,4 +7,4 @@ google-auth
 wordcloud
 matplotlib
 openpyxl
-googleapiclient
+google-api-python-client
