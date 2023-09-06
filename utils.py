@@ -9,7 +9,7 @@ def get_sideBar(title):
     st.sidebar.title(title)
     image = get_image()
     st.image(image)
-    st.markdown("## [Click here for Schedule](https://www.teamsideline.com/sites/georgetown/schedule/476652/Thursday-Mens-Recreational-League)")
+    st.markdown("## [Click here for Schedule](https://www.teamsideline.com/sites/georgetown/schedule/496762/Thursday-Mens-Recreation-League)")
     st.markdown("")
     st.markdown('## [Click here for Budget](https://docs.google.com/spreadsheets/d/1AYZyMQNMqUqAaN0m9aw4U5Uc73Vi5PNcn7pKeOcFMOg/edit?usp=sharing)')
 
