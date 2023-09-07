@@ -47,25 +47,11 @@ def coaching():
 
 
 
-    battingPhilosophy, battingJustification, fieldingPhilosophy, fieldingJustification, feedback = st.tabs(["Batting Order Philosophy", "Batting Order Justification", "Fielding Philosophy", "Fielding Justification", "Personalized Feedback"])
-
-    with battingPhilosophy:
-        path = 'assets/docs/Batting Order Philosophy.md'
-        st.markdown(return_markdown(path))
-    with battingJustification:
-        path = 'assets/docs/Batting Order Justification.md'
-        st.markdown(return_markdown(path))
-    with fieldingPhilosophy:
-        path = 'assets/docs/Fielding Philosophy.md'
-        st.markdown(return_markdown(path))
-
-    with fieldingJustification:
-        path = 'assets/docs/Fielding Justification.md'
-        st.markdown(return_markdown(path))
+    feedback, battingPhilosophy, battingJustification, fieldingPhilosophy, fieldingJustification, baserunningPhilosophy = st.tabs([ "Personalized Feedback", "Batting Order Philosophy", "Batting Order Justification", "Fielding Philosophy", 
+                                                                                                                                   "Fielding Justification", "Baserunning Philosophy"])
     
     with feedback:
         placeholder = st.empty()
-    
         with placeholder.form(key="login"):
             user = st.text_input("Email")
             st.form_submit_button("Login")
@@ -84,6 +70,25 @@ def coaching():
                     st.markdown(return_google_markdown(emails_ids[k][1]))
 
                     placeholder.empty()
+    with battingPhilosophy:
+        path = 'assets/docs/Batting Order Philosophy.md'
+        st.markdown(return_markdown(path))
+    with battingJustification:
+        path = 'assets/docs/Batting Order Justification.md'
+        st.markdown(return_markdown(path))
+    with fieldingPhilosophy:
+        path = 'assets/docs/Fielding Philosophy.md'
+        st.markdown(return_markdown(path))
+
+    with fieldingJustification:
+        path = 'assets/docs/Fielding Justification.md'
+        st.markdown(return_markdown(path))
+    
+    with baserunningPhilosophy:
+        path = 'assets/docs/Baserunning Philosophy.md'
+        st.markdown(return_markdown(path))
+    
+
 
 if __name__ == "__main__":
     coaching()
