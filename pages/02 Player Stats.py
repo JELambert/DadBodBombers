@@ -13,7 +13,7 @@ def labeler():
     df_agg = df_full.groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
 
 
-    split = st.radio("Select a split:", ("All-Time", 'Season 1', 'Season 2'))
+    split = st.radio("Select a split:", ("All-Time", 'Season 1', 'Season 2', 'Season 3'))
     if split == 'All-Time':
         df_agg = df_full.groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
         df_games = df_full.groupby(['game'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
@@ -23,11 +23,13 @@ def labeler():
         df_games = df_full.loc[df_full.game <7].groupby(['game'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
         df_full = df_full.loc[df_full.game <7]
     elif split == 'Season 2':
-        df_agg = df_full.loc[df_full.game >6].groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
-        df_games = df_full.loc[df_full.game >6].groupby(['game'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
-        df_full = df_full.loc[df_full.game >6]
-    
-
+        df_agg = df_full.loc[(df_full.game >6) & (df_full.game <15)].groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
+        df_games = df_full.loc[(df_full.game >6) & (df_full.game <15)].groupby(['game'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
+        df_full = df_full.loc[(df_full.game >6) & (df_full.game <15)]
+    elif split == 'Season 3':
+        df_agg = df_full.loc[df_full.game >14].groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
+        df_games = df_full.loc[df_full.game >14].groupby(['game'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
+        df_full = df_full.loc[df_full.game >14]
 
     df = add_cumulative_stats(df_agg)
 

@@ -22,13 +22,16 @@ def labeler():
     
     topcol1, topcol2 = st.columns(2)
     with topcol1:
-        split = st.radio("Select a split:", ("All-Time", 'Season 1', 'Season 2'))
+        split = st.radio("Select a split:", ("All-Time", 'Season 1', 'Season 2', 'Season 3'))
         if split == 'All-Time':
             df_agg = df_full.groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
         elif split == 'Season 1':
             df_agg = df_full.loc[df_full.game <7].groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
         elif split == 'Season 2':
-            df_agg = df_full.loc[df_full.game >6].groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
+            df_agg = df_full.loc[(df_full.game >6) & (df_full.game <15)].groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
+        elif split == 'Season 3':
+            df_agg = df_full.loc[df_full.game >14].groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
+    
     with topcol2:
         if split == 'All-Time':
             st.write("")
@@ -57,6 +60,16 @@ def labeler():
                 st.write("#### Grace")
                 st.write('* Top 5 in 10/10 categories.')
                 st.write("* Top 2 in 6/10 categories.")
+        elif split == 'Season 3':
+            sub1, sub2 = st.columns(2)
+            with sub1:
+                st.write("### :shield: Defensive MVP :shield:")
+                st.write("#### TBD")
+                st.write("")
+            with sub2:
+                st.write("### :hammer: Offensive MVP :hammer:")
+                st.write("#### TBD")
+                st.write('')
 
     df = add_cumulative_stats(df_agg)
 
