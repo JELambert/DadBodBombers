@@ -6,6 +6,7 @@ from PIL import Image
 
 import matplotlib.pyplot as plt
 from utils import *
+import os
 
 st.set_page_config(layout="wide")
 @st.cache_data()
@@ -14,7 +15,8 @@ def convert_df(df):
     return df.to_csv().encode('utf-8')
 
 def labeler():
-    streamlit_analytics.start_tracking(firestore_key_file="firebase-key.json", firestore_collection_name="home")
+    get_file_store()
+    streamlit_analytics.start_tracking(firestore_key_file='temp_json.json', firestore_collection_name="home")
 
     st.markdown("# Home Page")
     st.markdown("--------")
@@ -25,7 +27,7 @@ def labeler():
     
     topcol1, topcol2 = st.columns(2)
     with topcol1:
-        split = st.radio("Select a split:", ("All-Time", 'Season 1', 'Season 2', 'Season 3'))
+        split = st.radio("Select a Homepage split:", ("All-Time", 'Season 1', 'Season 2', 'Season 3'))
         if split == 'All-Time':
             df_agg = df_full.groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
         elif split == 'Season 1':
@@ -204,7 +206,8 @@ def labeler():
 
     st.markdown('----------')
 
-    streamlit_analytics.stop_tracking(firestore_key_file="firebase-key.json", firestore_collection_name="home")
+    streamlit_analytics.stop_tracking(firestore_key_file='temp_json.json', firestore_collection_name="home")
+    delete_file_store()
 
 if __name__ == "__main__":
     labeler()

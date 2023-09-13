@@ -33,8 +33,8 @@ def return_google_markdown(file_id):
     return content_to_display
 
 def coaching():
-
-    streamlit_analytics.start_tracking(firestore_key_file="firebase-key.json", firestore_collection_name="coach")
+    get_file_store()
+    streamlit_analytics.start_tracking(firestore_key_file="temp_json.json", firestore_collection_name="coach")
 
     st.markdown("# Coach's Corner")
     with st.sidebar: get_sideBar("Coach's Corner")
@@ -92,7 +92,7 @@ def coaching():
         st.markdown(return_markdown(path))
     
 
-    streamlit_analytics.stop_tracking(firestore_key_file="firebase-key.json", firestore_collection_name="coach")
-
+    streamlit_analytics.stop_tracking(firestore_key_file="temp_json.json", firestore_collection_name="coach")
+    delete_file_store()
 if __name__ == "__main__":
     coaching()

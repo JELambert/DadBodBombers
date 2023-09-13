@@ -6,7 +6,8 @@ import streamlit_analytics
 from utils import *
 
 def labeler():
-    streamlit_analytics.start_tracking(firestore_key_file="firebase-key.json", firestore_collection_name="player")
+    get_file_store()
+    streamlit_analytics.start_tracking(firestore_key_file="temp_json.json", firestore_collection_name="player")
 
     st.markdown("# Dad Bod Bombers")
     st.markdown("--------")
@@ -15,7 +16,7 @@ def labeler():
     df_agg = df_full.groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
 
 
-    split = st.radio("Select a split:", ("All-Time", 'Season 1', 'Season 2', 'Season 3'))
+    split = st.radio("Select a Player split:", ("All-Time", 'Season 1', 'Season 2', 'Season 3'))
     if split == 'All-Time':
         df_agg = df_full.groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
         df_games = df_full.groupby(['game'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
@@ -111,7 +112,7 @@ def labeler():
     st.write("Temporal Stats")
     st.write(df_full.loc[(df_full['name']==player)])
 
-    streamlit_analytics.stop_tracking(firestore_key_file="firebase-key.json", firestore_collection_name="player")
-
+    streamlit_analytics.stop_tracking(firestore_key_file="temp_json.json", firestore_collection_name="player")
+    delete_file_store()
 if __name__ == "__main__":
     labeler()

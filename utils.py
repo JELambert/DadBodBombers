@@ -1,8 +1,24 @@
 import streamlit as st
 from PIL import Image
 import pandas as pd
+import json
 from google.oauth2 import service_account
 import gspread
+import os
+from googleapiclient.discovery import build
+
+# Set up credentials
+credentials = service_account.Credentials.from_service_account_info(
+    st.secrets["gcp_service_account"],
+    scopes=[
+        "https://www.googleapis.com/auth/drive.readonly",
+        "https://www.googleapis.com/auth/spreadsheets.readonly"
+    ]
+)
+
+# Use the Drive API
+service = build('drive', 'v3', credentials=credentials)
+
 
 @st.cache_resource()
 def get_sideBar(title):
@@ -101,3 +117,23 @@ def add_cumulative_stats(df):
     df['total_bases'] = df['single'] + (2 * df['double']) + (3 * df['triple']) + (4 * df['homerun'])
     return df
     
+
+
+
+def return_google_markdown(file_id):
+    request = service.files().get_media(fileId=file_id)
+    content = request.execute()
+    _, content_to_display = content.decode("utf-8").split('SKIPABOVE', 1)
+    return content_to_display
+
+def get_file_store():
+    request = service.files().get_media(fileId='1K97IkXCQefclbzcKY0L9lb1ST1irNpD8')
+    content = request.execute()
+    json_file = content.decode("utf-8")
+    json_file = json.loads(json_file)
+
+    with open('temp_json.json', 'w') as f:
+        json.dump(json_file, f)
+
+def delete_file_store():
+    os.remove('temp_json.json')

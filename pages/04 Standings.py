@@ -10,7 +10,8 @@ def get_dadimage_1():
     return image
 
 def standings():
-    streamlit_analytics.start_tracking(firestore_key_file="firebase-key.json", firestore_collection_name="standings")
+    get_file_store()
+    streamlit_analytics.start_tracking(firestore_key_file="temp_json.json", firestore_collection_name="standings")
 
     with st.sidebar: get_sideBar('Standings Page')
 
@@ -176,7 +177,7 @@ def standings():
     st.markdown("--------")
 
 
-    streamlit_analytics.stop_tracking(firestore_key_file="firebase-key.json", firestore_collection_name="standings")
-
+    streamlit_analytics.stop_tracking(firestore_key_file="temp_json.json", firestore_collection_name="standings")
+    delete_file_store()
 if __name__ == "__main__":
     standings()

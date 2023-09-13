@@ -5,7 +5,8 @@ import pandas as pd
 from utils import *
 
 def labeler():
-    streamlit_analytics.start_tracking(firestore_key_file="firebase-key.json", firestore_collection_name="team")
+    get_file_store()
+    streamlit_analytics.start_tracking(firestore_key_file='temp_json.json', firestore_collection_name="team")
 
     st.markdown("# Team Stats")
     st.markdown("--------")
@@ -14,7 +15,7 @@ def labeler():
 
     df_full, df_full_nums = data_munging()
 
-    split = st.radio("Select a split:", ("All-Time", 'Season 1', 'Season 2', 'Season 3'))
+    split = st.radio("Select a Team split:", ("All-Time", 'Season 1', 'Season 2', 'Season 3'))
     if split == 'All-Time':
         df_agg = df_full.groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
         df_games = df_full.groupby(['game'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
@@ -110,7 +111,7 @@ def labeler():
         st.write("### Average: " + str(df['single'].astype(int).mean()))
         st.bar_chart(temporal.groupby('Game Number')['single'].sum().reset_index(), x='Game Number', y='single')
     
-    streamlit_analytics.stop_tracking(firestore_key_file="firebase-key.json", firestore_collection_name="team")
-
+    streamlit_analytics.stop_tracking(firestore_key_file="temp_json.json", firestore_collection_name="team")
+    delete_file_store()
 if __name__ == "__main__":
     labeler()
