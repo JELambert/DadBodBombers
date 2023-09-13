@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from PIL import Image
 from utils import *
+import streamlit_analytics
 
 @st.cache_data()
 def get_dadimage_1():
@@ -9,6 +10,8 @@ def get_dadimage_1():
     return image
 
 def standings():
+    streamlit_analytics.start_tracking(firestore_key_file="firebase-key.json", firestore_collection_name="standings")
+
     with st.sidebar: get_sideBar('Standings Page')
 
 
@@ -171,5 +174,9 @@ def standings():
     with st.expander("See the evidence:"):
         st.markdown('NO evidence of losses')
     st.markdown("--------")
+
+
+    streamlit_analytics.stop_tracking(firestore_key_file="firebase-key.json", firestore_collection_name="standings")
+
 if __name__ == "__main__":
     standings()

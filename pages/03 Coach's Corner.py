@@ -1,6 +1,6 @@
 import streamlit as st
 from utils import *
-
+import streamlit_analytics
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 
@@ -33,6 +33,9 @@ def return_google_markdown(file_id):
     return content_to_display
 
 def coaching():
+
+    streamlit_analytics.start_tracking(firestore_key_file="firebase-key.json", firestore_collection_name="coach")
+
     st.markdown("# Coach's Corner")
     with st.sidebar: get_sideBar("Coach's Corner")
 
@@ -89,6 +92,7 @@ def coaching():
         st.markdown(return_markdown(path))
     
 
+    streamlit_analytics.stop_tracking(firestore_key_file="firebase-key.json", firestore_collection_name="coach")
 
 if __name__ == "__main__":
     coaching()

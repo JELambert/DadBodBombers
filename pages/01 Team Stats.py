@@ -1,9 +1,11 @@
 import streamlit as st
+import streamlit_analytics
 import pandas as pd
 
 from utils import *
 
 def labeler():
+    streamlit_analytics.start_tracking(firestore_key_file="firebase-key.json", firestore_collection_name="team")
 
     st.markdown("# Team Stats")
     st.markdown("--------")
@@ -107,6 +109,8 @@ def labeler():
         st.write("### Overall: " + str(df['single'].astype(int).sum()))
         st.write("### Average: " + str(df['single'].astype(int).mean()))
         st.bar_chart(temporal.groupby('Game Number')['single'].sum().reset_index(), x='Game Number', y='single')
+    
+    streamlit_analytics.stop_tracking(firestore_key_file="firebase-key.json", firestore_collection_name="team")
 
 if __name__ == "__main__":
     labeler()

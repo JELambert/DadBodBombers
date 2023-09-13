@@ -1,4 +1,6 @@
 import streamlit as st
+import streamlit_analytics
+from google.cloud import firestore
 import pandas as pd
 from PIL import Image
 
@@ -12,6 +14,7 @@ def convert_df(df):
     return df.to_csv().encode('utf-8')
 
 def labeler():
+    streamlit_analytics.start_tracking(firestore_key_file="firebase-key.json", firestore_collection_name="home")
 
     st.markdown("# Home Page")
     st.markdown("--------")
@@ -201,6 +204,7 @@ def labeler():
 
     st.markdown('----------')
 
+    streamlit_analytics.stop_tracking(firestore_key_file="firebase-key.json", firestore_collection_name="home")
 
 if __name__ == "__main__":
     labeler()
