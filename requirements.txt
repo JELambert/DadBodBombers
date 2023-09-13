@@ -8,3 +8,4 @@ wordcloud
 matplotlib
 openpyxl
 google-api-python-client
+streamlit-analytics
