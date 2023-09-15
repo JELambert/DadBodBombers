@@ -15,8 +15,9 @@ def standings():
 
     with st.sidebar: get_sideBar('Standings Page')
 
-
-    st.markdown('# SEASON 2 - (3-5)')
+    st.markdown("### STANDINGPAGE UNDER REFACTOR")
+    st.markdown('------')
+    st.markdown('#### SEASON 2 - (3-5)')
 
     st.write("### Game 14 - 8/3/2023")
     col1, col2 = st.columns(2)
