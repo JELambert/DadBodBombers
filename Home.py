@@ -4,6 +4,7 @@ from google.cloud import firestore
 import pandas as pd
 from PIL import Image
 
+import matplotlib.pyplot as plt
 from utils import *
 import os
 
@@ -68,12 +69,15 @@ def labeler():
             sub1, sub2 = st.columns(2)
             with sub1:
                 st.write("### :shield: Defensive MVP :shield:")
-                st.write("#### TBD")
-                st.write("")
+                st.write("#### Frontrunners:")
+                st.write("* Cody - Cy young")
+                st.write("* Sean - 2b prowess")
+                st.write("* Gump - Keeps running down everything")
             with sub2:
                 st.write("### :hammer: Offensive MVP :hammer:")
-                st.write("#### TBD")
-                st.write('')
+                st.write("#### Frontrunners:")
+                st.write('* Sweet - 1000')
+                st.write("* Gump - 1000")
 
     df = add_cumulative_stats(df_agg)
 
