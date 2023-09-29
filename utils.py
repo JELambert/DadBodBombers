@@ -52,7 +52,7 @@ client = gspread.authorize(credentials)
 
 def get_googlesheet_id():
     ##### SET NEW PROJECT ID HERE #####
-    return 'dadbod_9_21_23_b'
+    return 'dadbod_9_28_23'
 
 @st.cache_resource()
 def get_recent_data(project_id):
@@ -80,6 +80,7 @@ def data_munging(recent = True):
                     'game15': 'data/dadbod_9_7_23 - lineup.csv',
                     'game16': 'data/dadbod_9_14_23 - lineup.csv',
                     'game17': 'data/dadbod_9_21_23_a - lineup.csv',
+                    'game18': 'data/dadbod_9_21_23_b - lineup.csv',
                     }
 
     id_name = pd.read_csv('data/id_name.csv').set_index('id')
