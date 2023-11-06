@@ -68,16 +68,12 @@ def labeler():
         elif split == 'Season 3':
             sub1, sub2 = st.columns(2)
             with sub1:
-                st.write("### :shield: Defensive MVP :shield:")
+                st.write("### :shield: CyYoung MVP :shield:")
                 st.write("#### Frontrunners:")
                 st.write("* Cody - Cy young")
-                st.write("* Sean - 2b prowess")
-                st.write("* Gump - Keeps running down everything")
             with sub2:
                 st.write("### :hammer: Offensive MVP :hammer:")
-                st.write("#### Frontrunners:")
                 st.write('* Sweet - 1000')
-                st.write("* Gump - 1000")
 
     df = add_cumulative_stats(df_agg)
 
