@@ -13,3 +13,8 @@
 * Build out season functionality
 * Add visualizations
 * Better caching on data/resources
+* ADD Submission button to all selections
+* Schedule removal and addition of permalinks
+* SSO integration
+* Feedback updates
+* Round all numbers on team, player and home pages
