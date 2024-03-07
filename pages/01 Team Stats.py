@@ -12,7 +12,6 @@ def labeler():
     st.markdown("--------")
 
 
-
     df_full, df_full_nums = data_munging()
 
     split = st.radio("Select a Team split:", ("All-Time", 'Season 1', 'Season 2', 'Season 3'))
