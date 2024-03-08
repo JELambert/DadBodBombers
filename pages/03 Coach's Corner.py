@@ -61,7 +61,7 @@ def coaching():
                     
         users = ['Beep', 'Tyler', 'LambertDBB', 'Grace', 'Ben', 'Forrest','Spangler',
                  'Sweet', 'Cody',  'Niko',  'Dan', 'Renzo', 'Sean', 'Shack', 'Frank',
-                 'Blake', 'Todd', 'Taylor', 'Connor']
+                 'Blake', 'Todd', 'Taylor', 'Connor', 'Ryan']
 
         emails = [st.secrets[x]['email'] for x in users]
         fileIds = [st.secrets[x]['fileid'] for x in users]
