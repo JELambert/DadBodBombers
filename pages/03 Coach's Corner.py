@@ -50,8 +50,8 @@ def coaching():
 
 
 
-    feedback, battingPhilosophy, battingJustification, fieldingPhilosophy, fieldingJustification, baserunningPhilosophy = st.tabs([ "Personalized Feedback", "Batting Order Philosophy", "Batting Order Justification", "Fielding Philosophy", 
-                                                                                                                                   "Fielding Justification", "Baserunning Philosophy"])
+    feedback, battingPhilosophy, battingJustification, fieldingPhilosophy, fieldingJustification, baserunningPhilosophy, numberofplayers = st.tabs([ "Personalized Feedback", "Batting Order Philosophy", "Batting Order Justification", "Fielding Philosophy", 
+                                                                                                                                   "Fielding Justification", "Baserunning Philosophy", "Number of Players"])
     
     with feedback:
         placeholder = st.empty()
@@ -92,7 +92,11 @@ def coaching():
     with baserunningPhilosophy:
         path = 'assets/docs/Baserunning Philosophy.md'
         st.markdown(return_markdown(path))
-    
+
+    with numberofplayers:
+        path = 'assets/docs/Number of players.md'
+        st.markdown(return_markdown(path))    
+
 
     #streamlit_analytics.stop_tracking(firestore_key_file="temp_json.json", firestore_collection_name="coach")
     #delete_file_store()
