@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from PIL import Image
 from utils import *
-import streamlit_analytics
+#import streamlit_analytics
 import matplotlib.pyplot as plt
 
 @st.cache_data()
@@ -11,8 +11,8 @@ def get_dadimage_1():
     return image
 
 def feedback():
-    get_file_store()
-    streamlit_analytics.start_tracking(firestore_key_file="temp_json.json", firestore_collection_name="feedback")
+    #get_file_store()
+    #streamlit_analytics.start_tracking(firestore_key_file="temp_json.json", firestore_collection_name="feedback")
 
     st.markdown("### End of Season Feedback")
     with st.sidebar: get_sideBar('Feedback')
@@ -61,7 +61,7 @@ def feedback():
     st.markdown('----------')
 
 
-    streamlit_analytics.stop_tracking(firestore_key_file="temp_json.json", firestore_collection_name="feedback")
-    delete_file_store()
+    #streamlit_analytics.stop_tracking(firestore_key_file="temp_json.json", firestore_collection_name="feedback")
+    #delete_file_store()
 if __name__ == "__main__":
     feedback()

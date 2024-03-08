@@ -1,6 +1,6 @@
 import streamlit as st
 from utils import *
-import streamlit_analytics
+#import streamlit_analytics
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 
@@ -33,8 +33,8 @@ def return_google_markdown(file_id):
     return content_to_display
 
 def coaching():
-    get_file_store()
-    streamlit_analytics.start_tracking(firestore_key_file="temp_json.json", firestore_collection_name="coach")
+    #get_file_store()
+    #streamlit_analytics.start_tracking(firestore_key_file="temp_json.json", firestore_collection_name="coach")
 
     st.markdown("# Coach's Corner")
     with st.sidebar: get_sideBar("Coach's Corner")
@@ -69,7 +69,8 @@ def coaching():
 
         if user:
             for k in emails_ids:
-                if user == emails_ids[k][0]:
+                email_non_capitalized = emails_ids[k][0].lower()
+                if user.lower() == email_non_capitalized:
                     st.markdown("### Welcome {} to your personalized Coach's Corner".format(k.capitalize()))
                     st.markdown(return_google_markdown(emails_ids[k][1]))
 
@@ -93,7 +94,7 @@ def coaching():
         st.markdown(return_markdown(path))
     
 
-    streamlit_analytics.stop_tracking(firestore_key_file="temp_json.json", firestore_collection_name="coach")
-    delete_file_store()
+    #streamlit_analytics.stop_tracking(firestore_key_file="temp_json.json", firestore_collection_name="coach")
+    #delete_file_store()
 if __name__ == "__main__":
     coaching()

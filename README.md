@@ -5,16 +5,14 @@
 * Home page with team leaders and Game summary
 * Team stats page with aggregates
 * Player stats page with individual stats
+* Coach's Corner
+* Feedback
 
 --------
 
 #### TODO
-* Build out time series incorporation for future games
-* Build out season functionality
-* Add visualizations
 * Better caching on data/resources
-* ADD Submission button to all selections
-* Schedule removal and addition of permalinks
+* ADD Form Submission button to all selections
 * SSO integration
 * Feedback updates
 * Round all numbers on team, player and home pages

@@ -7,6 +7,8 @@ import gspread
 import os
 from googleapiclient.discovery import build
 
+pd.set_option('future.no_silent_downcasting', True)
+
 # Set up credentials
 credentials = service_account.Credentials.from_service_account_info(
     st.secrets["gcp_service_account"],
@@ -52,7 +54,7 @@ client = gspread.authorize(credentials)
 
 def get_googlesheet_id():
     ##### SET NEW PROJECT ID HERE #####
-    return 'dadbod_11_2_23'
+    return 'dadbod_3_7_24'
 
 @st.cache_resource()
 def get_recent_data(project_id):
@@ -83,7 +85,8 @@ def data_munging(recent = True):
                     'game18': 'data/dadbod_9_21_23_b - lineup.csv',
                     'game19': 'data/dadbod_9_28_23 - lineup.csv',
                     'game20': 'data/dadbod_10_13_23 - lineup.csv',
-                    'game21': 'data/dadbod_10_19_23 - lineup.csv'
+                    'game21': 'data/dadbod_10_19_23 - lineup.csv',
+                    'game22': 'data/dadbod_11_2_23 - lineup.csv',
                     }
 
     id_name = pd.read_csv('data/id_name.csv').set_index('id')
@@ -104,8 +107,8 @@ def data_munging(recent = True):
         recent_game = recent_game.merge(id_name, left_index=True, right_index=True)
         recent_game.fillna(0, inplace=True)
         recent_game.replace('', 0, inplace=True)
-        recent_game['game'] = str(len(dict_of_games) + 1)
-        recent_game['games_played'] = 1
+        recent_game.loc[:, 'game'] = str(len(dict_of_games) + 1)
+        recent_game.loc[:, 'games_played'] = 1
         dfs_list.append(recent_game)
 
     df_full = pd.concat(dfs_list)
@@ -114,14 +117,16 @@ def data_munging(recent = True):
 
     return df_full, df_full_nums
 
-def add_cumulative_stats(df):
+def add_cumulative_stats(df_orig):
+    df = df_orig.copy()
     df[['atbats', 'walks', 'single', 'double', 'triple', 'homerun']] = df[['atbats', 'walks', 'single', 'double', 'triple', 'homerun']].astype(int)
-    df['batting_average'] = (df['single'] + df['double'] + df['triple'] + df['homerun'])  / (df['atbats'] - df['walks']) * (1000)
-    df['hits'] = df['single'] + df['double'] + df['triple'] + df['homerun']
-    df['onbase'] = (df['hits'] + df['walks']) / df['atbats'] * (1000)
-    df['slugging'] = (df['single'] + (2 * df['double']) + (3 * df['triple']) + (4 * df['homerun'])) / df['atbats'] * (1000)
-    df['onbase_plus_slugging'] = df['onbase'] + df['slugging']
-    df['total_bases'] = df['single'] + (2 * df['double']) + (3 * df['triple']) + (4 * df['homerun'])
+    df.loc[:, 'batting_average']  = (df['single'] + df['double'] + df['triple'] + df['homerun'])  / (df['atbats'] - df['walks']) * (1000)
+    df.loc[:, 'hits'] = df['single'] + df['double'] + df['triple'] + df['homerun']
+    df.loc[:, 'onbase'] = (df['hits'] + df['walks']) / df['atbats'] * (1000)
+    df.loc[:, 'slugging'] = (df['single'] + (2 * df['double']) + (3 * df['triple']) + (4 * df['homerun'])) / df['atbats'] * (1000)
+    df.loc[:, 'onbase_plus_slugging'] = df['onbase'] + df['slugging']
+    df.loc[:, 'total_bases'] = df['single'] + (2 * df['double']) + (3 * df['triple']) + (4 * df['homerun'])
+
     return df
     
 

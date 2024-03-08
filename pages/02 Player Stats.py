@@ -1,13 +1,13 @@
 import streamlit as st
 import pandas as pd
 from PIL import Image
-import streamlit_analytics
+#import streamlit_analytics
 
 from utils import *
 
 def labeler():
-    get_file_store()
-    streamlit_analytics.start_tracking(firestore_key_file="temp_json.json", firestore_collection_name="player")
+    #get_file_store()
+    #streamlit_analytics.start_tracking(firestore_key_file="temp_json.json", firestore_collection_name="player")
 
     st.markdown("# Dad Bod Bombers")
     st.markdown("--------")
@@ -112,7 +112,7 @@ def labeler():
     st.write("Temporal Stats")
     st.write(df_full.loc[(df_full['name']==player)])
 
-    streamlit_analytics.stop_tracking(firestore_key_file="temp_json.json", firestore_collection_name="player")
-    delete_file_store()
+    #streamlit_analytics.stop_tracking(firestore_key_file="temp_json.json", firestore_collection_name="player")
+    #delete_file_store()
 if __name__ == "__main__":
     labeler()
