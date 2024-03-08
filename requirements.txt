@@ -9,3 +9,7 @@ matplotlib
 openpyxl
 google-api-python-client
 streamlit-analytics
+llama-index
+llama-index-core
+llama-index-legacy
+openai
