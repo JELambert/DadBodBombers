@@ -83,47 +83,54 @@ def labeler():
     with c1:
         st.markdown("#### Singles")
         singles = df.loc[df.single>0].sort_values(by=['single'], ascending=False).head(5)[['name', 'single']]
-        st.write(singles)
+        st.dataframe(singles, hide_index=True)
 
     with c2:
         st.markdown("#### Doubles")
         doubles = df.loc[df.double>0].sort_values(by=['double'], ascending=False).head(5)[['name', 'double']]
-        st.write(doubles)
+        st.dataframe(doubles, hide_index=True)
+
     with c3:
         st.markdown("#### Triples")
         triples = df.loc[df.triple>0].sort_values(by=['triple'], ascending=False).head(5)[['name', 'triple']]
-        st.write(triples)
+        st.dataframe(triples, hide_index=True)
+
     with c4:
         st.markdown("#### Homeruns")
         homers = df.loc[df.homerun>0].sort_values(by=['homerun'], ascending=False).head(5)[['name', 'homerun']]
-        st.write(homers)
+        st.dataframe(homers, hide_index=True)
+
     with c5:
         st.markdown("#### Total Bases")
         total_bases = df.loc[df.total_bases>0].sort_values(by=['total_bases'], ascending=False).head(5)[['name', 'total_bases']]
-        st.write(total_bases)
+        st.dataframe(total_bases, hide_index=True)
 
     st.markdown("--------")
     cl1, cl2, cl3, cl4, cl5 = st.columns(5)
     with cl1:
         st.markdown("#### Batting Average")
         baframe = df.sort_values(by=['batting_average'], ascending=False).head(5)[['name', 'batting_average']]
-        st.write(baframe)
+        st.dataframe(baframe, hide_index=True)
+
     with cl2:
         st.markdown("#### On Base %")
         onbase = df.sort_values(by=['onbase'], ascending=False).head(5)[['name', 'onbase']]
-        st.write(onbase)
+        st.dataframe(onbase, hide_index=True)
+
     with cl3:
         st.markdown("#### Slugging %")
         slugging = df.sort_values(by=['slugging'], ascending=False).head(5)[['name', 'slugging']]
-        st.write(slugging)
+        st.dataframe(slugging, hide_index=True)
+
     with cl4:
         st.markdown("#### Runs")
         runs = df.sort_values(by=['run'], ascending=False).head(5)[['name', 'run']]
-        st.write(runs)
+        st.dataframe(runs, hide_index=True)
+
     with cl5:
         st.markdown("#### RBI")
         rbi = df.sort_values(by=['rbi'], ascending=False).head(5)[['name', 'rbi']]
-        st.write(rbi)
+        st.dataframe(rbi, hide_index=True)
 
     st.markdown('--------')
     st.markdown("## See the full stats sheet:")
@@ -159,8 +166,53 @@ def labeler():
         )
 
     
-    #streamlit_analytics.stop_tracking(firestore_key_file='temp_json.json', firestore_collection_name="home")
-    #delete_file_store()
+
+#     ar_all = []
+#     for player in ['Ben', 'Tyler', 'Beep']:
+#         ar_all.append(make_temp_array(player, df_full))
+#     import random
+#     df = pd.DataFrame(
+#     {
+#         "name": ["Roadmap", "Extras", "Issues"],
+#         "url": ["https://roadmap.streamlit.app", "https://extras.streamlit.app", "https://issues.streamlit.app"],
+#         "stars": [random.randint(0, 1000) for _ in range(3)],
+#         "views_history": ar_all,
+#     }
+#     )
+#     st.dataframe(
+#         df,
+#         column_config={
+#             "name": "App name",
+#             "stars": st.column_config.NumberColumn(
+#                 "Github Stars",
+#                 help="Number of stars on GitHub",
+#                 format="%d ⭐",
+#             ),
+#             "url": st.column_config.LinkColumn("App URL"),
+#             "views_history": st.column_config.LineChartColumn(
+#                 "Views (past 30 days)", y_min=0, y_max=5
+#             ),
+#         },
+#         hide_index=True,
+#     )
+#     #streamlit_analytics.stop_tracking(firestore_key_file='temp_json.json', firestore_collection_name="home")
+#     #delete_file_store()
+
+
+# def make_temp_array(player, df_full, category):
+#     game_list = []
+#     for i in df_full['game'].unique():
+#         game_df = df_full.loc[(df_full['game']==i) & (df_full['name']==player)]
+#         game_df_stats = add_cumulative_stats(game_df)
+#         game_df_stats['game'] = 'Game ' + str(i)
+#         game_list.append(game_df_stats)
+#     temporal = pd.concat(game_list)
+#     temporal['Game Number'] = temporal['game'].str.split(' ').str[1].astype(int)
+#     temporal = temporal.sort_values(by='Game Number')
+
+#     df_sorted = temporal.sort_values(by='game')
+#     hits_array = df_sorted['hits'].to_numpy()
+#     return hits_array
 
 if __name__ == "__main__":
     labeler()
