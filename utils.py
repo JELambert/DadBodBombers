@@ -53,8 +53,8 @@ credentials = service_account.Credentials.from_service_account_info(
 client = gspread.authorize(credentials)
 
 def get_googlesheet_id():
-    ##### SET NEW PROJECT ID HERE #####
-    return 'dadbod_3_7_24'
+    ##### SET NEW Game ID HERE #####
+    return 'dadbod_3_14_24'
 
 @st.cache_resource()
 def get_recent_data(project_id):
@@ -87,6 +87,7 @@ def data_munging(recent = True):
                     'game20': 'data/dadbod_10_13_23 - lineup.csv',
                     'game21': 'data/dadbod_10_19_23 - lineup.csv',
                     'game22': 'data/dadbod_11_2_23 - lineup.csv',
+                    'game23': 'data/dadbod_3_7_24 - lineup.csv',
                     }
 
     id_name = pd.read_csv('data/id_name.csv').set_index('id')
@@ -114,8 +115,21 @@ def data_munging(recent = True):
     df_full = pd.concat(dfs_list)
     df_full[['atbats', 'walks', 'single', 'double', 'triple', 'homerun', 'game']] = df_full[['atbats', 'walks', 'single', 'double', 'triple', 'homerun',  'game']].astype(int)
     df_full_nums = df_full[[ 'atbats', 'walks', 'single', 'double', 'triple', 'homerun', 'run', 'rbi', 'games_played']]
+    
+    df_full['season'] = df_full.apply(add_season, axis=1)
+    df_full_nums['season'] = df_full['season']
 
     return df_full, df_full_nums
+
+def add_season(x):
+    if x['game'] < 7:
+        return 1
+    elif x['game'] > 6 and x['game'] < 15:
+        return 2
+    elif x['game'] > 14 and x['game'] < 23:
+        return 3
+    else:
+        return 4
 
 def add_cumulative_stats(df_orig):
     df = df_orig.copy()
@@ -127,8 +141,28 @@ def add_cumulative_stats(df_orig):
     df.loc[:, 'onbase_plus_slugging'] = df['onbase'] + df['slugging']
     df.loc[:, 'total_bases'] = df['single'] + (2 * df['double']) + (3 * df['triple']) + (4 * df['homerun'])
 
+    for c in ['single', 'double', 'triple', 'homerun', 'hits', 'total_bases']:
+        newname = c + "_array"
+
+
     return df
-    
+
+
+def make_cumulative_array(player, df_full, category):
+    game_list = []
+    for i in df_full['game'].unique():
+        game_df = df_full.loc[(df_full['game']==i) & (df_full['name']==player)]
+        game_df_stats = add_cumulative_stats(game_df)
+        game_df_stats['game'] = 'Game ' + str(i)
+        game_list.append(game_df_stats)
+    temporal = pd.concat(game_list)
+    temporal['Game Number'] = temporal['game'].str.split(' ').str[1].astype(int)
+    temporal = temporal.sort_values(by='Game Number')
+
+    df_sorted = temporal.sort_values(by='game')
+    hits_array = df_sorted[category].to_numpy()
+    return hits_array
+
 
 
 
@@ -149,3 +183,71 @@ def get_file_store():
 
 def delete_file_store():
     os.remove('temp_json.json')
+
+@st.cache_data()
+def make_fielding():
+
+    fielding_files = {
+        'game23': 'data/fielding_3_7_24.csv', 
+        'game24': 'data/fielding_3_14_24.csv'
+    }
+
+    fielding_dict = {}
+
+    for f in fielding_files.keys():
+        fielding = pd.read_csv(fielding_files[f])
+        fielding = fielding.fillna(0)
+        fielding['raw_defense'] = fielding.apply(build_raw_defense_totals, axis=1)
+        
+        fielding_dict[f] = {}
+
+        fielding_dict[f]['disaggregate'] = fielding
+    
+        intermediate = fielding.groupby(['name', 'id'])[['raw_defense', 'E', 'EH', 'OC', 'OCH', 'OT', 'OTH', 'RM']].sum().reset_index()
+        scaled = scaler(intermediate)
+        fielding_dict[f]['aggregate'] = scaled
+
+    games_disaggregate = []
+
+    for g in fielding_dict.keys():
+        games_disaggregate.append(fielding_dict[g]['disaggregate'])
+    
+    fullset = pd.concat(games_disaggregate)
+    fullset_agg = fullset.groupby(['name', 'id'])[['raw_defense', 'E', 'EH', 'OC', 'OCH', 'OT', 'OTH', 'RM']].sum().reset_index()
+    fullset_scaled = scaler(fullset_agg)
+    fielding_dict['overall'] = {}
+    fielding_dict['overall']['aggregate'] = fullset_scaled
+    fielding_dict['overall']['disaggregate'] = fullset
+    return fielding_dict
+
+def build_raw_defense_totals(x):
+    position_config = {'1B': 3, 
+                        '2B': 3, 
+                        '3B': 4, 
+                        'SS': 5, 
+                        'LF': 4, 
+                        'LC': 4, 
+                        'RC': 4,
+                        'RF': 3, 
+                        'P': 3, 
+                        'C': 1}
+    return ((x['E'] *-3 / position_config[x['Positions']]) + (x['OC']*position_config[x['Positions']]) + (x['OCH'] * 2 * position_config[x['Positions']]) + (x['OT']*position_config[x['Positions']]) + (x['OTH']*2 * position_config[x['Positions']]) + (x['RM']*-1 /position_config[x['Positions']]))
+
+
+def scaler(intermediate):
+
+    colname = 'DPI'
+
+    def custom_scaler(x):
+        max_val = x.max()
+        min_val = x.min()
+        if max_val == min_val:
+            return x
+        max_abs = max(abs(max_val), abs(min_val))
+        scaled_values = x / max_abs
+        return scaled_values
+
+    # Apply the custom scaler to
+    intermediate[colname] = custom_scaler(intermediate['raw_defense'])
+
+    return intermediate

@@ -1,6 +1,6 @@
 import streamlit as st
 #import streamlit_analytics
-from google.cloud import firestore
+#from google.cloud import firestore
 import pandas as pd
 from PIL import Image
 
@@ -24,10 +24,11 @@ def labeler():
     with st.sidebar: get_sideBar('Home Page')
 
     df_full, df_full_nums = data_munging()
-    
+    fielding = make_fielding()
+
     topcol1, topcol2 = st.columns(2)
     with topcol1:
-        split = st.radio("Select a Homepage split:", ("All-Time", 'Season 1', 'Season 2', 'Season 3'))
+        split = st.radio("Select a Homepage split:", ("All-Time", 'Season 1', 'Season 2', 'Season 3', 'Season 4'))
         if split == 'All-Time':
             df_agg = df_full.groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
         elif split == 'Season 1':
@@ -35,8 +36,10 @@ def labeler():
         elif split == 'Season 2':
             df_agg = df_full.loc[(df_full.game >6) & (df_full.game <15)].groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
         elif split == 'Season 3':
-            df_agg = df_full.loc[df_full.game >14].groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
-    
+            df_agg = df_full.loc[(df_full.game >14) & (df_full.game<23)].groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
+        elif split == 'Season 4':
+            df_agg = df_full.loc[df_full.game >22].groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
+
     with topcol2:
         if split == 'All-Time':
             st.write("")
@@ -74,6 +77,16 @@ def labeler():
             with sub2:
                 st.write("### :hammer: Offensive MVP :hammer:")
                 st.write('* Sweet - 1000')
+        elif split == 'Season 4':
+            sub1, sub2 = st.columns(2)
+            with sub1:
+                st.write("### TBD")
+                #st.write("#### Frontrunners:")
+                #st.write("* Cody - Cy young")
+            with sub2:
+                st.write("### TBD")
+                #st.write('* Sweet - 1000')
+
 
     df = add_cumulative_stats(df_agg)
 
@@ -83,6 +96,13 @@ def labeler():
     with c1:
         st.markdown("#### Singles")
         singles = df.loc[df.single>0].sort_values(by=['single'], ascending=False).head(5)[['name', 'single']]
+        
+        # ar_all = []
+        # for player in singles['name'].unique()[:5]:
+        #     ar_all.append(make_cumulative_array(player, df_all, 'single'))
+        # singles['array'] = ar_all
+        # col_config(singles, 'hits')
+
         st.dataframe(singles, hide_index=True)
 
     with c2:
@@ -132,6 +152,59 @@ def labeler():
         rbi = df.sort_values(by=['rbi'], ascending=False).head(5)[['name', 'rbi']]
         st.dataframe(rbi, hide_index=True)
 
+
+    st.markdown("--------")
+    st.markdown("## Defensive Performance Index (DPI)")
+
+    st.bar_chart(fielding['overall']['aggregate'].sort_values(by='DPI', ascending=False), x='name', y='DPI')
+
+
+    st.markdown('''
+                Defensive Performance Index is a defensive metric that combines:
+                * Errors
+                * Outs Caught
+                * Outs Caught Hard
+                * Outs Thrown
+                * Outs Thrown Hard
+                * Range Missed (Player unable to get to ball given range)
+                * Positional difficulty
+                ''')
+    st.markdown("")
+    with st.expander("For algorithm:"):
+        st.markdown('''
+                    def build_raw_defense_totals(x):
+                        position_config = {'1B': 3, 
+                        '2B': 3, 
+                        '3B': 4, 
+                        'SS': 5, 
+                        'LF': 4, 
+                        'LC': 4, 
+                        'RC': 4,
+                        'RF': 3, 
+                        'P': 3, 
+                        'C': 2}
+    return 
+((x['E'] *-2 / position_config[x['Positions']]) + 
+(x['OC']*position_config[x['Positions']]) + 
+(x['OCH'] * 2 * position_config[x['Positions']]) + 
+(x['OT']*position_config[x['Positions']]) + 
+(x['OTH']*2 * position_config[x['Positions']]) + 
+(x['RM']*-1 /position_config[x['Positions']]))")
+                    ''')
+
+    with st.expander("## See full defensive stats:"):
+        st.write(fielding['overall']['disaggregate'])
+
+    with st.expander("Explainer of raw stats:"):
+        st.markdown('''
+Error- A defensive mistake made by a player that allows an opposing batter or baserunner to advance safely
+Error hard- An error that would be difficult for anyone to make a play 
+Out caught- A defensive play on a ball that was thrown, or hit by the batter to a player that results in an out. 
+Out caught hard- A ball that is thrown or hit towards a player that would’ve been difficult for them to make a play on the ball. 
+Out thrown- If a player has the ball and they throw to a bag that a runner isn’t on or has reached and it results in an out. 
+Out thrown hard- If a player has the ball and the throw to get the out is not an easy throw to make but they deliver a good throw for their teammate to catch it for a possible out. 
+Range miss- If the ball is hit near a player but its just outside of your possible area that you wouldn’t be able to reach. ''')
+
     st.markdown('--------')
     st.markdown("## See the full stats sheet:")
 
@@ -165,38 +238,54 @@ def labeler():
             mime='text/csv',
         )
 
-    
+    # ar_all = []
 
-#     ar_all = []
-#     for player in ['Ben', 'Tyler', 'Beep']:
-#         ar_all.append(make_temp_array(player, df_full))
-#     import random
-#     df = pd.DataFrame(
-#     {
-#         "name": ["Roadmap", "Extras", "Issues"],
-#         "url": ["https://roadmap.streamlit.app", "https://extras.streamlit.app", "https://issues.streamlit.app"],
-#         "stars": [random.randint(0, 1000) for _ in range(3)],
-#         "views_history": ar_all,
+    # for player in singles['name'].unique()[:5]:
+    #     ar_all.append(make_cumulative_array(player, df_full, 'single'))
+
+    # col_config(newonbase, 'hits')
+
+
+
+    # st.dataframe(
+    #     df,
+    #     column_config={
+    #         "name": "App name",
+    #         "stars": st.column_config.NumberColumn(
+    #             "Github Stars",
+    #             help="Number of stars on GitHub",
+    #             format="%d ⭐",
+    #         ),
+    #         "url": st.column_config.LinkColumn("App URL"),
+    #         "views_history": st.column_config.LineChartColumn(
+    #             "Views (past 30 days)", y_min=0, y_max=5
+    #         ),
+    #     },
+    #     hide_index=True,
+    # )
+
+# def col_config(df, colname):
+#     mapping = {'hits': {'format': "Hits", 'y_min': 0, 'y_max': 5},
+#                'singles': {'format': "Singles", 'y_min': 0, 'y_max': 5},
 #     }
-#     )
-#     st.dataframe(
+
+#     return st.dataframe(
 #         df,
 #         column_config={
-#             "name": "App name",
-#             "stars": st.column_config.NumberColumn(
-#                 "Github Stars",
-#                 help="Number of stars on GitHub",
-#                 format="%d ⭐",
+#             "name": "Player",
+#             colname: st.column_config.NumberColumn(
+#                 mapping[colname]['format'],
 #             ),
-#             "url": st.column_config.LinkColumn("App URL"),
-#             "views_history": st.column_config.LineChartColumn(
-#                 "Views (past 30 days)", y_min=0, y_max=5
+#             "array": st.column_config.LineChartColumn(
+#                 "", y_min=mapping[colname]['y_min'], y_max=mapping[colname]['y_max']
 #             ),
 #         },
 #         hide_index=True,
 #     )
-#     #streamlit_analytics.stop_tracking(firestore_key_file='temp_json.json', firestore_collection_name="home")
-#     #delete_file_store()
+
+
+    #streamlit_analytics.stop_tracking(firestore_key_file='temp_json.json', firestore_collection_name="home")
+    #delete_file_store()
 
 
 # def make_temp_array(player, df_full, category):
