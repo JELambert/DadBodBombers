@@ -16,8 +16,6 @@
 * SSO integration
 * Feedback updates
 * Round all numbers on team, player and home pages
-* Backlog on adding last season's MVP
-* New Season Button
 * Integrate season as a column
 * Col name cleanup for GenAI purposes
 * Improve the display for the tables

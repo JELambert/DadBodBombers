@@ -251,3 +251,87 @@ def scaler(intermediate):
     intermediate[colname] = custom_scaler(intermediate['raw_defense'])
 
     return intermediate
+
+
+def make_temporal_games(df_full):
+    game_list = []
+    for i in df_full['game'].unique():
+        game_df = df_full.loc[df_full['game']==i]
+        game_df_stats = add_cumulative_stats(game_df)
+        game_df_stats['game'] = 'Game ' + str(i)
+        game_list.append(game_df_stats)
+    temporal = pd.concat(game_list)
+    temporal['Game Number'] = temporal['game'].str.split(' ').str[1].astype(int)
+    temporal = temporal.sort_values(by='Game Number')
+
+    return temporal
+
+
+def make_temporal_player(df_full, player):
+    game_list = []
+    for i in df_full['game'].unique():
+        game_df = df_full.loc[(df_full['game']==i) & (df_full['name']==player)]
+        game_df_stats = add_cumulative_stats(game_df)
+        game_df_stats['game'] = 'Game ' + str(i)
+        game_list.append(game_df_stats)
+    temporal = pd.concat(game_list)
+    temporal['Game Number'] = temporal['game'].str.split(' ').str[1].astype(int)
+    temporal = temporal.sort_values(by='Game Number')
+    return temporal
+
+@st.cache_data()
+def make_data_dict():
+
+    df_full, df_full_nums = data_munging()
+    fielding = make_fielding()
+
+    big_dict = {}
+    big_dict['df_full'] = df_full
+    big_dict['df_full_nums'] = df_full_nums
+    big_dict['fielding'] = fielding
+    
+    ### Season disaggregates
+    big_dict['df_s1'] = df_full.loc[df_full.game <7]
+    big_dict['df_s2'] = df_full.loc[(df_full.game >6) & (df_full.game <15)]
+    big_dict['df_s3'] = df_full.loc[(df_full.game >14) & (df_full.game<23)]
+    big_dict['df_s4'] = df_full.loc[df_full.game >22]
+
+    ### Baseline aggregates player
+    big_dict['df_agg_all'] = big_dict['df_full'].groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
+    big_dict['df_agg_s1'] = big_dict['df_s1'].groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
+    big_dict['df_agg_s2'] = big_dict['df_s2'].groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
+    big_dict['df_agg_s3']  = big_dict['df_s3'].groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
+    big_dict['df_agg_s4'] = big_dict['df_s4'].groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
+
+    ### Add cumulative player
+    big_dict['df_cumulative_all'] = add_cumulative_stats(big_dict['df_agg_all'])
+    big_dict['df_cumulative_s1']  = add_cumulative_stats(big_dict['df_agg_s1'])
+    big_dict['df_cumulative_s2'] = add_cumulative_stats(big_dict['df_agg_s2'])
+    big_dict['df_cumulative_s3'] = add_cumulative_stats(big_dict['df_agg_s3'])
+    big_dict['df_cumulative_s4'] = add_cumulative_stats(big_dict['df_agg_s4'])
+    
+    ### Make game temporal data
+    big_dict['temporal_all'] = make_temporal_games(big_dict['df_full'])
+    big_dict['temporal_s1'] = make_temporal_games(big_dict['df_s1'])
+    big_dict['temporal_s2'] = make_temporal_games(big_dict['df_s2'])
+    big_dict['temporal_s3'] = make_temporal_games(big_dict['df_s3'])
+    big_dict['temporal_s4'] = make_temporal_games(big_dict['df_s4'])
+
+    ### Baseline aggregates team
+    big_dict['df_games_all'] = df_full.groupby(['game'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
+    big_dict['df_games_s1']  = df_full.loc[df_full.game <7].groupby(['game'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
+    big_dict['df_games_s2'] = df_full.loc[(df_full.game >6) & (df_full.game <15)].groupby(['game'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
+    big_dict['df_games_s3'] = df_full.loc[(df_full.game >14) & (df_full.game<23)].groupby(['game'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
+    big_dict['df_games_s4'] = df_full.loc[df_full.game >22].groupby(['game'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
+
+
+    big_dict['player'] = {}
+
+    ### Make player temporal data
+    for i in big_dict['df_full'].name.unique():
+        big_dict['player'][i] = {}
+        for df in ['df_full', 'df_s1', 'df_s2', 'df_s3', 'df_s4']:    
+            big_dict['player'][i][df] = make_temporal_player(big_dict[df], i)
+
+    return big_dict
+

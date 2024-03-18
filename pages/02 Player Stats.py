@@ -1,13 +1,10 @@
 import streamlit as st
 import pandas as pd
 from PIL import Image
-#import streamlit_analytics
 
 from utils import *
 
 def labeler():
-    #get_file_store()
-    #streamlit_analytics.start_tracking(firestore_key_file="temp_json.json", firestore_collection_name="player")
 
     st.markdown("# Dad Bod Bombers")
     st.markdown("--------")
@@ -15,40 +12,60 @@ def labeler():
     df_full, df_full_nums = data_munging()
     df_agg = df_full.groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
 
+    big_dict = make_data_dict()
 
-    split = st.radio("Select a Player split:", ("All-Time", 'Season 1', 'Season 2', 'Season 3'))
+
+    with st.form('selection'):
+
+        split = st.radio("Select a Player split:", ("All-Time", 'Season 1', 'Season 2', 'Season 3', 'Season 4'))
+        player = st.selectbox('Select a player', sorted(df_full['name'].unique()), index=0)
+        submit = st.form_submit_button('Select')
+
     if split == 'All-Time':
-        df_agg = df_full.groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
-        df_games = df_full.groupby(['game'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
-        df_full = df_full
+        df_agg = big_dict['df_agg_all']
+        df_games = big_dict['df_games_all']
+        df_full = big_dict['df_full']
+        temporal = big_dict['player'][player]['df_full']
+
     elif split == 'Season 1':
-        df_agg = df_full.loc[df_full.game <7].groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
-        df_games = df_full.loc[df_full.game <7].groupby(['game'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
-        df_full = df_full.loc[df_full.game <7]
+        df_agg = big_dict['df_agg_s1']
+        df_games = big_dict['df_games_s1']
+        df_full = big_dict['df_s1']
+        temporal = big_dict['player'][player]['df_s1']
+
     elif split == 'Season 2':
-        df_agg = df_full.loc[(df_full.game >6) & (df_full.game <15)].groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
-        df_games = df_full.loc[(df_full.game >6) & (df_full.game <15)].groupby(['game'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
-        df_full = df_full.loc[(df_full.game >6) & (df_full.game <15)]
+        df_agg = big_dict['df_agg_s2']
+        df_games = big_dict['df_games_s2']
+        df_full = big_dict['df_s2']
+        temporal = big_dict['player'][player]['df_s2']
+
     elif split == 'Season 3':
-        df_agg = df_full.loc[df_full.game >14].groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
-        df_games = df_full.loc[df_full.game >14].groupby(['game'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
-        df_full = df_full.loc[df_full.game >14]
+        df_agg = big_dict['df_agg_s3']
+        df_games = big_dict['df_games_s3']
+        df_full = big_dict['df_s3']
+        temporal = big_dict['player'][player]['df_s3']
+
+    elif split == 'Season 4':
+        df_agg = big_dict['df_agg_s4']
+        df_games = big_dict['df_games_s4']
+        df_full = big_dict['df_s4']
+        temporal = big_dict['player'][player]['df_s4']
+
 
     df = add_cumulative_stats(df_agg)
 
     with st.sidebar: get_sideBar('Player Stats')
 
-    player = st.selectbox('Select a player', sorted(df_full['name'].unique()))
 
-    game_list = []
-    for i in df_full['game'].unique():
-        game_df = df_full.loc[(df_full['game']==i) & (df_full['name']==player)]
-        game_df_stats = add_cumulative_stats(game_df)
-        game_df_stats['game'] = 'Game ' + str(i)
-        game_list.append(game_df_stats)
-    temporal = pd.concat(game_list)
-    temporal['Game Number'] = temporal['game'].str.split(' ').str[1].astype(int)
-    temporal = temporal.sort_values(by='Game Number')
+    # game_list = []
+    # for i in df_full['game'].unique():
+    #     game_df = df_full.loc[(df_full['game']==i) & (df_full['name']==player)]
+    #     game_df_stats = add_cumulative_stats(game_df)
+    #     game_df_stats['game'] = 'Game ' + str(i)
+    #     game_list.append(game_df_stats)
+    # temporal = pd.concat(game_list)
+    # temporal['Game Number'] = temporal['game'].str.split(' ').str[1].astype(int)
+    # temporal = temporal.sort_values(by='Game Number')
     df = df[df['name'] == player]
 
     col1, col2 = st.columns(2)

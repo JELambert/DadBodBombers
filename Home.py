@@ -1,6 +1,4 @@
 import streamlit as st
-#import streamlit_analytics
-#from google.cloud import firestore
 import pandas as pd
 from PIL import Image
 
@@ -15,80 +13,89 @@ def convert_df(df):
     return df.to_csv().encode('utf-8')
 
 def labeler():
-    #get_file_store()
-    #streamlit_analytics.start_tracking(firestore_key_file='temp_json.json', firestore_collection_name="home")
 
     st.markdown("# Home Page")
     st.markdown("--------")
 
     with st.sidebar: get_sideBar('Home Page')
 
-    df_full, df_full_nums = data_munging()
-    fielding = make_fielding()
 
-    topcol1, topcol2 = st.columns(2)
-    with topcol1:
-        split = st.radio("Select a Homepage split:", ("All-Time", 'Season 1', 'Season 2', 'Season 3', 'Season 4'))
-        if split == 'All-Time':
-            df_agg = df_full.groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
-        elif split == 'Season 1':
-            df_agg = df_full.loc[df_full.game <7].groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
-        elif split == 'Season 2':
-            df_agg = df_full.loc[(df_full.game >6) & (df_full.game <15)].groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
-        elif split == 'Season 3':
-            df_agg = df_full.loc[(df_full.game >14) & (df_full.game<23)].groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
-        elif split == 'Season 4':
-            df_agg = df_full.loc[df_full.game >22].groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
-
-    with topcol2:
-        if split == 'All-Time':
-            st.write("")
-        elif split == 'Season 1':
-            st.write('## :crown: Co-MVP Awards :crown:')
-            sub1, sub2 = st.columns(2)
-            with sub1:
-                st.write("### Ben")
-                st.write("* Homerun and Total bases leader.")
-                st.write("* Top 5 in 9/10 categories.")
-                st.write("* Top 2 in 5/10 categories.")
-
-            with sub2:
-                st.write("### Tyler")
-                st.write("* Averaged 4 bases per game.")
-                st.write("* Top 5 in 9/10 categories.")
-                st.write("* Missed the cyle in Game 5 by only a single.")
-        elif split == 'Season 2':
-            sub1, sub2 = st.columns(2)
-            with sub1:
-                st.write("### :shield: Defensive MVP :shield:")
-                st.write("#### Spangler")
-                st.write("* When starting SS, 4 runs given up per game vs 14")
-            with sub2:
-                st.write("### :hammer: Offensive MVP :hammer:")
-                st.write("#### Grace")
-                st.write('* Top 5 in 10/10 categories.')
-                st.write("* Top 2 in 6/10 categories.")
-        elif split == 'Season 3':
-            sub1, sub2 = st.columns(2)
-            with sub1:
-                st.write("### :shield: CyYoung MVP :shield:")
-                st.write("#### Frontrunners:")
-                st.write("* Cody - Cy young")
-            with sub2:
-                st.write("### :hammer: Offensive MVP :hammer:")
-                st.write('* Sweet - 1000')
-        elif split == 'Season 4':
-            sub1, sub2 = st.columns(2)
-            with sub1:
-                st.write("### TBD")
-                #st.write("#### Frontrunners:")
-                #st.write("* Cody - Cy young")
-            with sub2:
-                st.write("### TBD")
-                #st.write('* Sweet - 1000')
+    big_dict = make_data_dict()
 
 
-    df = add_cumulative_stats(df_agg)
+
+    with st.form('selection'):
+        
+
+        topcol1, topcol2 = st.columns(2)
+        with topcol1:
+            split = st.radio("Select a Homepage split:", ("All-Time", 'Season 1', 'Season 2', 'Season 3', 'Season 4'))
+            submit = st.form_submit_button('Select')
+
+            if split == 'All-Time':
+                df_agg = big_dict['df_agg_all']
+                df = big_dict['df_cumulative_all']
+            elif split == 'Season 1':
+                df_agg = big_dict['df_agg_s1']
+                df = big_dict['df_cumulative_s1']
+            elif split == 'Season 2':
+                df_agg = big_dict['df_agg_s2']
+                df = big_dict['df_cumulative_s2']
+            elif split == 'Season 3':
+                df_agg = big_dict['df_agg_s3']
+                df = big_dict['df_cumulative_s3']
+            elif split == 'Season 4':
+                df_agg = big_dict['df_agg_s4']
+                df = big_dict['df_cumulative_s4']
+
+        with topcol2:
+            if split == 'All-Time':
+                st.write("")
+            elif split == 'Season 1':
+                st.write('## :crown: Co-MVP Awards :crown:')
+                sub1, sub2 = st.columns(2)
+                with sub1:
+                    st.write("### Ben")
+                    st.write("* Homerun and Total bases leader.")
+                    st.write("* Top 5 in 9/10 categories.")
+                    st.write("* Top 2 in 5/10 categories.")
+
+                with sub2:
+                    st.write("### Tyler")
+                    st.write("* Averaged 4 bases per game.")
+                    st.write("* Top 5 in 9/10 categories.")
+                    st.write("* Missed the cyle in Game 5 by only a single.")
+            elif split == 'Season 2':
+                sub1, sub2 = st.columns(2)
+                with sub1:
+                    st.write("### :shield: Defensive MVP :shield:")
+                    st.write("#### Spangler")
+                    st.write("* When starting SS, 4 runs given up per game vs 14")
+                with sub2:
+                    st.write("### :hammer: Offensive MVP :hammer:")
+                    st.write("#### Grace")
+                    st.write('* Top 5 in 10/10 categories.')
+                    st.write("* Top 2 in 6/10 categories.")
+            elif split == 'Season 3':
+                sub1, sub2 = st.columns(2)
+                with sub1:
+                    st.write("### :shield: CyYoung MVP :shield:")
+                    st.write("#### Cody - Cy young")
+                    st.write("* From 13 runs given up per game to 9")
+                    st.write("* Multiple strikeouts...in slow pitch softball")
+                with sub2:
+                    st.write("### :hammer: Offensive MVP :hammer:")
+                    st.write('#### Sweet - 1000')
+                    st.write("* The man got on base 13 straight times.")
+
+            elif split == 'Season 4':
+                sub1, sub2 = st.columns(2)
+                with sub1:
+                    st.write("### MVP Offense - TBD")
+                with sub2:
+                    st.write("### MVP Defense - TBD")
+
+
 
     st.markdown("### Team Leaders")
 
@@ -156,7 +163,7 @@ def labeler():
     st.markdown("--------")
     st.markdown("## Defensive Performance Index (DPI)")
 
-    st.bar_chart(fielding['overall']['aggregate'].sort_values(by='DPI', ascending=False), x='name', y='DPI')
+    st.bar_chart(big_dict['fielding']['overall']['aggregate'].sort_values(by='DPI', ascending=False), x='name', y='DPI')
 
 
     st.markdown('''
@@ -193,7 +200,7 @@ def labeler():
                     ''')
 
     with st.expander("## See full defensive stats:"):
-        st.write(fielding['overall']['disaggregate'])
+        st.write(big_dict['fielding']['overall']['disaggregate'])
 
     with st.expander("Explainer of raw stats:"):
         st.markdown('''
@@ -227,9 +234,9 @@ Range miss- If the ball is hit near a player but its just outside of your possib
             mime='application/json',
         )
     with st.expander('Click here for broken down stats'):
-        st.write(df_full)
+        st.write(big_dict['df_full'])
 
-        csv = convert_df(df_full)
+        csv = convert_df(big_dict['df_full'])
 
         st.download_button(
             label="Download data as CSV",
