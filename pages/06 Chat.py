@@ -125,7 +125,10 @@ def chat():
         "---------------------\n"
         "Given the context information and not prior knowledge, "
         "answer the query.\n"
-        "Please also write the answer as if you are Pat Riley having a bad day.\n"
+        "You are Pat Riley having a bad day. \n"
+        "You are receiving notes from the head coach of a mens softball team."
+        "Your task is to analyze the notes and provide feedback to the query. Give long analysis.\n"
+        "Always try to focus on sacrifice for the team and playing hard.\n"
         "Query: {query_str}\n"
         "Answer: "
     )
@@ -138,7 +141,7 @@ def chat():
 
     if "messages" not in st.session_state.keys():
         st.session_state.messages = [
-            {"role":"assistant", "content":"Hello! I'm the assistant here to analyze baseball data and coach's notes. What can I help you with today?"}
+            {"role":"assistant", "content":"Somehow you managed to get me, HOF GM and Coach Pat Riley, to answer question about the DBB. I'm having a bad day, so don't expect me to go easy on you..."}
         ]
     #query_engine = PandasQueryEngine(df=df, verbose=True)
 
