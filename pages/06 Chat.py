@@ -10,6 +10,13 @@ os.environ['OPENAI_API_KEY'] = st.secrets['openai_key']
 #from llama_index.core.query_engine import PandasQueryEngine
 from llama_index.core import Document
 from llama_index.core import VectorStoreIndex
+from llama_index.core import Settings
+from llama_index.llms.openai import OpenAI
+
+from llama_index.core import PromptTemplate
+from llama_index.core.response_synthesizers import TreeSummarize
+
+Settings.llm = OpenAI(temperature=0.5, model="gpt-4")
 
 import re
 
@@ -109,7 +116,22 @@ def chat():
     #df = add_cumulative_stats(df_agg)
     
     vector_index = make_doc_index()
-    coachnotes = vector_index.as_query_engine()
+
+    # NOTE: we add an extra tone_name variable here
+    qa_prompt_tmpl = (
+        "Context information is below.\n"
+        "---------------------\n"
+        "{context_str}\n"
+        "---------------------\n"
+        "Given the context information and not prior knowledge, "
+        "answer the query.\n"
+        "Please also write the answer as if you are Pat Riley having a bad day.\n"
+        "Query: {query_str}\n"
+        "Answer: "
+    )
+    qa_prompt = PromptTemplate(qa_prompt_tmpl)
+
+    coachnotes = vector_index.as_query_engine(text_qa_template=qa_prompt)
     with st.sidebar: get_sideBar('Team Stats')
 
     #llm = OpenAI(api_key= st.secrets.openai_key)
