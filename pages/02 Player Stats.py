@@ -18,7 +18,7 @@ def labeler():
     with st.form('selection'):
 
         split = st.radio("Select a Player split:", ("All-Time", 'Season 1', 'Season 2', 'Season 3', 'Season 4'))
-        player = st.selectbox('Select a player', sorted(df_full['name'].unique()), index=0)
+        player = st.selectbox('Select a player', sorted(df_full['name'].unique()), index=13)
         submit = st.form_submit_button('Select')
 
     if split == 'All-Time':
@@ -56,16 +56,6 @@ def labeler():
 
     with st.sidebar: get_sideBar('Player Stats')
 
-
-    # game_list = []
-    # for i in df_full['game'].unique():
-    #     game_df = df_full.loc[(df_full['game']==i) & (df_full['name']==player)]
-    #     game_df_stats = add_cumulative_stats(game_df)
-    #     game_df_stats['game'] = 'Game ' + str(i)
-    #     game_list.append(game_df_stats)
-    # temporal = pd.concat(game_list)
-    # temporal['Game Number'] = temporal['game'].str.split(' ').str[1].astype(int)
-    # temporal = temporal.sort_values(by='Game Number')
     df = df[df['name'] == player]
 
     col1, col2 = st.columns(2)
@@ -122,6 +112,7 @@ def labeler():
         st.markdown('Player HR:')
         st.markdown("### Overall: " + str(df['homerun'].astype(int).sum()))
         st.bar_chart(data=temporal, x='Game Number', y='homerun')
+        
     st.write('------')
     st.write("Aggregate Stats")
     st.write(df)
@@ -129,7 +120,5 @@ def labeler():
     st.write("Temporal Stats")
     st.write(df_full.loc[(df_full['name']==player)])
 
-    #streamlit_analytics.stop_tracking(firestore_key_file="temp_json.json", firestore_collection_name="player")
-    #delete_file_store()
 if __name__ == "__main__":
     labeler()
