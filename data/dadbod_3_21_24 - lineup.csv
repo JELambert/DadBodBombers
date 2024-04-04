@@ -1,0 +1,13 @@
+lineup_pos,name,atbats,single,double,triple,homerun,walks,rbi,run,strikeout,id
+1,Beep,2,,,,,1,,1,,18
+2,Forrest,2,2,,,,,1,1,,19
+3,Grace,2,1,,,,,1,,,5
+4,Ben,2,1,,,,1,1,,,4
+5,Ryan,2,,,,,,,,,26
+6,Josh,2,,,,,1,,,,1
+7,Niko,2,,,,,,,,,9
+8,Frank,2,,,,,,,,,11
+9,Sean,1,,,,,,,,,7
+10,Connor,1,1,,,,,,1,,3
+11,Cody,1,1,,,,,,,,14
+12,Shack,0,,,,,,,,,12
