@@ -96,7 +96,7 @@ def data_munging(recent = True):
                     'game29': 'data/dadbod_4_18_24 - lineup.csv',
                     'game30': 'data/dadbod_4_25_24 - lineup.csv',
                     'game31': 'data/dadbod_6_13_24 - lineup.csv',
-                    'game31': 'data/dadbod_6_28_24 - lineup.csv'
+                    'game32': 'data/dadbod_6_28_24 - lineup.csv'
                     }
 
     id_name = pd.read_csv('data/id_name.csv').set_index('id')

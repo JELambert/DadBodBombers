@@ -18,7 +18,7 @@ def labeler():
 
     with st.form('selection'):
             
-        split = st.radio("Select a Team split:", ("All-Time", 'Season 1', 'Season 2', 'Season 3', 'Season 4'))
+        split = st.radio("Select a Team split:", ("All-Time", 'Season 1', 'Season 2', 'Season 3', 'Season 4', 'Season 5'))
         submit = st.form_submit_button('Select')
 
         if split == 'All-Time':
@@ -50,6 +50,13 @@ def labeler():
             df_games = big_dict['df_games_s4']
             df_full = big_dict['df_s4']
             temporal = big_dict['temporal_s4']
+
+        elif split == 'Season 5':
+            df_agg = big_dict['df_agg_s5']
+            df_games = big_dict['df_games_s5']
+            df_full = big_dict['df_s5']
+            temporal = big_dict['temporal_s5']
+
 
     df = add_cumulative_stats(df_games)
 
