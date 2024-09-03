@@ -101,9 +101,11 @@ def labeler():
             elif split == 'Season 5':
                 sub1, sub2 = st.columns(2)
                 with sub1:
-                    st.write("### MVP Offense - TBD")
+                    st.write("### MVP - Ryan")
+                    st.write("* Two walk offs...nuff said")
                 with sub2:
-                    st.write("### MVP Defense - TBD")
+                    st.write("### Rookie of the year - Clint")
+                    st.write("* Major moves in batting order in sight.")
 
 
     st.markdown("### Team Leaders")
