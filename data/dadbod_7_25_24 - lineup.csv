@@ -1,0 +1,12 @@
+ ,name,atbats,single,double,triple,homerun,walks,rbi,run,strikeout,id
+1,Beep,3,1,1,1,,,2,2,,18
+2,Josh,3,,1,1,,,2,2,,1
+3,Grace,3,,,,,,1,,,5
+4,Taylor,3,1,,,,,,1,,28
+5,Caleb,3,,1,,,,,,,29
+6,Cody,3,1,,,,,,,1,3
+7,Frank,3,1,,,,,1,,,11
+8,Sean,3,1,1,,,,,,,7
+9,Anthony,2,1,,,,,,,,32
+10,Blake,2,,,,,,,,,33
+11,Shack,2,1,,,,1,,2,,12
