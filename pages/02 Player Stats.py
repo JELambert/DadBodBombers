@@ -17,7 +17,7 @@ def labeler():
 
     with st.form('selection'):
 
-        split = st.radio("Select a Player split:", ("All-Time", 'Season 1', 'Season 2', 'Season 3', 'Season 4', 'Season 5'))
+        split = st.radio("Select a Player split:", ("All-Time", 'Season 1', 'Season 2', 'Season 3', 'Season 4', 'Season 5', 'Season 6'))
         player = st.selectbox('Select a player', sorted(df_full['name'].unique()), index=13)
         submit = st.form_submit_button('Select')
 
@@ -57,6 +57,12 @@ def labeler():
         df_full = big_dict['df_s5']
         temporal = big_dict['player'][player]['df_s5']
 
+    elif split == 'Season 6':
+        df_agg = big_dict['df_agg_s6']
+        df_games = big_dict['df_games_s6']
+        df_full = big_dict['df_s6']
+        temporal = big_dict['player'][player]['df_s6']
+        
     df = add_cumulative_stats(df_agg)
 
     with st.sidebar: get_sideBar('Player Stats')

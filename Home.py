@@ -29,7 +29,7 @@ def labeler():
 
         topcol1, topcol2 = st.columns(2)
         with topcol1:
-            split = st.radio("Select a Homepage split:", ("All-Time", 'Season 1', 'Season 2', 'Season 3', 'Season 4', 'Season 5'))
+            split = st.radio("Select a Homepage split:", ("All-Time", 'Season 1', 'Season 2', 'Season 3', 'Season 4', 'Season 5', 'Season 6'))
             submit = st.form_submit_button('Select')
 
             if split == 'All-Time':
@@ -50,6 +50,9 @@ def labeler():
             elif split == 'Season 5':
                 df_agg = big_dict['df_agg_s5']
                 df = big_dict['df_cumulative_s5']
+            elif split == 'Season 6':
+                df_agg = big_dict['df_agg_s6']
+                df = big_dict['df_cumulative_s6']
 
         with topcol2:
             if split == 'All-Time':
@@ -107,7 +110,13 @@ def labeler():
                     st.write("### Rookie of the year - Clint")
                     st.write("* Major moves in batting order in sight.")
 
-
+            elif split == 'Season 6':
+                sub1, sub2 = st.columns(2)
+                with sub1:
+                    st.write("### MVP - TBD")
+                with sub2:
+                    st.write("### TBD")
+                    
     st.markdown("### Team Leaders")
 
     c1, c2, c3, c4, c5 = st.columns(5)

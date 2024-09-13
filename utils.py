@@ -54,7 +54,7 @@ client = gspread.authorize(credentials)
 
 def get_googlesheet_id():
     ##### SET NEW Game ID HERE #####
-    return 'dadbod_8_22_24b'
+    return 'dadbod_9_12_24'
 
 @st.cache_resource()
 def get_recent_data(project_id):
@@ -101,6 +101,7 @@ def data_munging(recent = True):
                     'game34': 'data/dadbod_8_1_24 - lineup.csv',
                     'game35': 'data/dadbod_8_15_24 - lineup.csv',
                     'game36': 'data/dadbod_8_22_24a - lineup.csv',
+                    'game37': 'data/dadbod_8_22_24b - lineup.csv',
                     }
 
     id_name = pd.read_csv('data/id_name.csv').set_index('id')
@@ -143,8 +144,10 @@ def add_season(x):
         return 3
     elif x['game'] > 22 and x['game'] < 31:
         return 4
-    else:
+    elif x['game'] >30 and x['game'] < 38:
         return 5
+    else:
+        return 6
 
 def add_cumulative_stats(df_orig):
     df = df_orig.copy()
@@ -316,7 +319,8 @@ def make_data_dict():
     big_dict['df_s2'] = df_full.loc[(df_full.game >6) & (df_full.game <15)]
     big_dict['df_s3'] = df_full.loc[(df_full.game >14) & (df_full.game<23)]
     big_dict['df_s4'] = df_full.loc[(df_full.game >22) & (df_full.game<31)]
-    big_dict['df_s5'] = df_full.loc[df_full.game >30]
+    big_dict['df_s5'] = df_full.loc[(df_full.game >30) & (df_full.game<38)]
+    big_dict['df_s6'] = df_full.loc[df_full.game >37]
 
     ### Baseline aggregates player
     big_dict['df_agg_all'] = big_dict['df_full'].groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
@@ -325,7 +329,8 @@ def make_data_dict():
     big_dict['df_agg_s3']  = big_dict['df_s3'].groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
     big_dict['df_agg_s4'] = big_dict['df_s4'].groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
     big_dict['df_agg_s5'] = big_dict['df_s5'].groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
-    
+    big_dict['df_agg_s6'] = big_dict['df_s6'].groupby(['id', 'name'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
+
     ### Add cumulative player
     big_dict['df_cumulative_all'] = add_cumulative_stats(big_dict['df_agg_all'])
     big_dict['df_cumulative_s1']  = add_cumulative_stats(big_dict['df_agg_s1'])
@@ -333,6 +338,7 @@ def make_data_dict():
     big_dict['df_cumulative_s3'] = add_cumulative_stats(big_dict['df_agg_s3'])
     big_dict['df_cumulative_s4'] = add_cumulative_stats(big_dict['df_agg_s4'])
     big_dict['df_cumulative_s5'] = add_cumulative_stats(big_dict['df_agg_s5'])
+    big_dict['df_cumulative_s6'] = add_cumulative_stats(big_dict['df_agg_s6'])
 
     ### Make game temporal data
     big_dict['temporal_all'] = make_temporal_games(big_dict['df_full'])
@@ -341,6 +347,7 @@ def make_data_dict():
     big_dict['temporal_s3'] = make_temporal_games(big_dict['df_s3'])
     big_dict['temporal_s4'] = make_temporal_games(big_dict['df_s4'])
     big_dict['temporal_s5'] = make_temporal_games(big_dict['df_s5'])
+    big_dict['temporal_s6'] = make_temporal_games(big_dict['df_s6'])
 
     ### Baseline aggregates team
     big_dict['df_games_all'] = df_full.groupby(['game'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
@@ -348,8 +355,7 @@ def make_data_dict():
     big_dict['df_games_s2'] = df_full.loc[(df_full.game >6) & (df_full.game <15)].groupby(['game'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
     big_dict['df_games_s3'] = df_full.loc[(df_full.game >14) & (df_full.game<23)].groupby(['game'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
     big_dict['df_games_s4'] = df_full.loc[(df_full.game >22) & (df_full.game<31)].groupby(['game'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
-    big_dict['df_games_s5'] = df_full.loc[df_full.game >30].groupby(['game'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
-
+    big_dict['df_games_s5'] = df_full.loc[(df_full.game >30) & (df_full.game<38)].groupby(['game'])[['atbats', 'run', 'rbi', 'walks', 'single', 'double', 'triple', 'homerun', 'games_played']].sum().reset_index()
 
     big_dict['player'] = {}
 
